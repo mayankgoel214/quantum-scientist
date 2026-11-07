@@ -1,0 +1,146 @@
+{
+ "exp_id": "e004",
+ "spec": {
+  "n_qubits": 8,
+  "layout_strategy": "weighted_tree",
+  "root": null,
+  "exclude_qubits": [],
+  "circuit_variant": "tree",
+  "dynamical_decoupling": true,
+  "measure_twirling": true,
+  "readout_mitigation": true,
+  "shots": 2000,
+  "mode": "qpu",
+  "hypothesis": "First hardware shot: confirm the pipeline and readout mitigation on real qubits."
+ },
+ "physical_qubits": [
+  47,
+  48,
+  57,
+  46,
+  45,
+  44,
+  37,
+  25
+ ],
+ "tree_edges": [
+  [
+   47,
+   48
+  ],
+  [
+   47,
+   57
+  ],
+  [
+   47,
+   46
+  ],
+  [
+   46,
+   45
+  ],
+  [
+   45,
+   44
+  ],
+  [
+   45,
+   37
+  ],
+  [
+   37,
+   25
+  ]
+ ],
+ "root": 47,
+ "circuit_depth": 7,
+ "two_qubit_gate_count": 7,
+ "fidelity": 0.843,
+ "ci_low": 0.824,
+ "ci_high": 0.862,
+ "populations": 0.93,
+ "coherence": 0.756,
+ "parity_curve": [
+  {
+   "phi": 0.0,
+   "parity": 0.7844
+  },
+  {
+   "phi": 0.349066,
+   "parity": -0.7404
+  },
+  {
+   "phi": 0.698132,
+   "parity": 0.6244
+  },
+  {
+   "phi": 1.047198,
+   "parity": -0.4734
+  },
+  {
+   "phi": 1.396263,
+   "parity": 0.2345
+  },
+  {
+   "phi": 1.745329,
+   "parity": 0.0041
+  },
+  {
+   "phi": 2.094395,
+   "parity": -0.2874
+  },
+  {
+   "phi": 2.443461,
+   "parity": 0.4978
+  },
+  {
+   "phi": 2.792527,
+   "parity": -0.6584
+  },
+  {
+   "phi": 3.141593,
+   "parity": 0.7707
+  },
+  {
+   "phi": 3.490659,
+   "parity": -0.7519
+  },
+  {
+   "phi": 3.839724,
+   "parity": 0.6362
+  },
+  {
+   "phi": 4.18879,
+   "parity": -0.4744
+  },
+  {
+   "phi": 4.537856,
+   "parity": 0.1799
+  },
+  {
+   "phi": 4.886922,
+   "parity": 0.002
+  },
+  {
+   "phi": 5.235988,
+   "parity": -0.2846
+  },
+  {
+   "phi": 5.585054,
+   "parity": 0.4637
+  },
+  {
+   "phi": 5.934119,
+   "parity": -0.6618
+  }
+ ],
+ "certified": true,
+ "qpu_seconds": 6.31,
+ "wall_seconds": 109.7,
+ "backend": "ibm_fez",
+ "job_ids": [
+  "d45afc65b4ddge7439b"
+ ],
+ "error": null
+}

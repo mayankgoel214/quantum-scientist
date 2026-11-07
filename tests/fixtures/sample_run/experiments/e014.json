@@ -1,0 +1,237 @@
+{
+ "exp_id": "e014",
+ "spec": {
+  "n_qubits": 40,
+  "layout_strategy": "weighted_tree",
+  "root": null,
+  "exclude_qubits": [
+   62,
+   63,
+   81
+  ],
+  "circuit_variant": "tree",
+  "dynamical_decoupling": true,
+  "measure_twirling": true,
+  "readout_mitigation": true,
+  "shots": 2000,
+  "mode": "qpu",
+  "hypothesis": "Second attempt at 40 after a fresh shallower tree."
+ },
+ "physical_qubits": [
+  47,
+  48,
+  57,
+  46,
+  45,
+  44,
+  37,
+  25,
+  26,
+  24,
+  23,
+  27,
+  49,
+  50,
+  38,
+  29,
+  28,
+  30,
+  31,
+  18,
+  22,
+  21,
+  16,
+  11,
+  10,
+  36,
+  17,
+  20,
+  9,
+  8,
+  43,
+  56,
+  42,
+  3,
+  4,
+  2,
+  5,
+  1,
+  7,
+  6
+ ],
+ "tree_edges": [
+  [
+   47,
+   48
+  ],
+  [
+   47,
+   57
+  ],
+  [
+   47,
+   46
+  ],
+  [
+   46,
+   45
+  ],
+  [
+   45,
+   44
+  ],
+  [
+   45,
+   37
+  ],
+  [
+   37,
+   25
+  ],
+  [
+   25,
+   26
+  ],
+  [
+   25,
+   24
+  ],
+  [
+   24,
+   23
+  ],
+  [
+   26,
+   27
+  ],
+  [
+   48,
+   49
+  ],
+  [
+   49,
+   50
+  ],
+  [
+   49,
+   38
+  ],
+  [
+   38,
+   29
+  ],
+  [
+   29,
+   28
+  ],
+  [
+   29,
+   30
+  ],
+  [
+   30,
+   31
+  ],
+  [
+   31,
+   18
+  ],
+  [
+   23,
+   22
+  ],
+  [
+   22,
+   21
+  ],
+  [
+   23,
+   16
+  ],
+  [
+   18,
+   11
+  ],
+  [
+   11,
+   10
+  ],
+  [
+   21,
+   36
+  ],
+  [
+   27,
+   17
+  ],
+  [
+   21,
+   20
+  ],
+  [
+   10,
+   9
+  ],
+  [
+   9,
+   8
+  ],
+  [
+   44,
+   43
+  ],
+  [
+   43,
+   56
+  ],
+  [
+   43,
+   42
+  ],
+  [
+   16,
+   3
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   4,
+   5
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   17,
+   7
+  ],
+  [
+   7,
+   6
+  ]
+ ],
+ "root": 47,
+ "circuit_depth": 14,
+ "two_qubit_gate_count": 39,
+ "fidelity": null,
+ "ci_low": null,
+ "ci_high": null,
+ "populations": null,
+ "coherence": null,
+ "parity_curve": [],
+ "certified": false,
+ "qpu_seconds": 11.78,
+ "wall_seconds": 221.0,
+ "backend": "ibm_fez",
+ "job_ids": [
+  "d49c92939059g672c29"
+ ],
+ "error": "RuntimeJobFailureError: job cancelled by backend (calibration window)"
+}

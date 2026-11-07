@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Q-Scientist · Mission Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a0c0f'/%3E%3Cg stroke='%2362d6c0' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M16 10v12M16 16l-7 6M16 16l7 6'/%3E%3C/g%3E%3Ccircle cx='16' cy='9' r='3.4' fill='%2362d6c0'/%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none">
+          <path d="M16 11v9M16 15l-8 7M16 15l8 7M8 22v4M24 22v4"/>
+        </g>
+        <circle cx="16" cy="8" r="3.6" fill="currentColor"/>
+        <circle cx="8" cy="26" r="2.2" fill="currentColor" opacity=".7"/>
+        <circle cx="16" cy="22" r="2.2" fill="currentColor" opacity=".7"/>
+        <circle cx="24" cy="26" r="2.2" fill="currentColor" opacity=".7"/>
+      </svg>
+      <h1>Q-Scientist <span class="dash">—</span> <span class="tagline">an autonomous AI physicist on IBM quantum hardware</span></h1>
+    </div>
+    <div class="top-controls">
+      <label class="run-picker">
+        <span class="sr">Run</span>
+        <select id="runSelect" aria-label="Run"></select>
+      </label>
+      <div class="seg" role="group" aria-label="Mode">
+        <button data-mode="replay" class="on">Replay</button>
+        <button data-mode="live">Live</button>
+      </div>
+      <a id="paperLink" class="btn-ghost" target="_blank" rel="noopener" hidden>Paper ↗</a>
+      <div id="statusPill" class="pill">REPLAY</div>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="hero panel">
+      <div class="hero-main">
+        <div class="hero-label">Certified entangled qubits <span class="on-hw">on real hardware</span></div>
+        <div class="hero-row">
+          <div id="heroQpu" class="hero-num">—</div>
+          <div class="hero-meta">
+            <div id="heroQpuBackend" class="hero-backend">ibm_fez · 156-qubit Heron</div>
+            <div id="heroQpuSub" class="hero-sub">awaiting a hardware run</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-sim">
+        <div class="hero-label">In noisy simulation</div>
+        <div class="hero-row">
+          <div id="heroSim" class="hero-num small">—</div>
+          <div id="heroSimSub" class="hero-sub">—</div>
+        </div>
+      </div>
+      <div class="meters">
+        <div class="meter" id="meterQpu">
+          <div class="meter-head"><span>QPU time</span><span class="meter-val"><b id="qpuUsed">0</b> / <span id="qpuMax">—</span> s</span></div>
+          <div class="bar"><i id="qpuBar"></i></div>
+          <div class="meter-foot" id="qpuFoot">the scarce 10 minutes</div>
+        </div>
+        <div class="meter" id="meterLlm">
+          <div class="meter-head"><span>LLM calls</span><span class="meter-val"><b id="llmUsed">0</b> / <span id="llmMax">—</span></span></div>
+          <div class="bar"><i id="llmBar"></i></div>
+          <div class="meter-foot" id="nowLine">idle</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chip panel">
+      <div class="panel-head">
+        <h2>Chip map <span id="chipName" class="muted">ibm_fez</span></h2>
+        <div class="legend">
+          <span class="lg-grad"><i></i>CZ error <span class="mono">1e-3</span>→<span class="mono">3e-2</span></span>
+          <span class="lg-dead"><i></i>dead</span>
+          <span class="lg-dot run"></span>entangling
+          <span class="lg-dot ok"></span>certified
+          <span class="lg-dot bad"></span>not certified
+        </div>
+      </div>
+      <div class="chip-wrap">
+        <svg id="chipSvg" preserveAspectRatio="xMidYMid meet"></svg>
+        <div id="chipCaption" class="chip-caption" hidden></div>
+        <div id="chipEmpty" class="empty" hidden>No calibration.json for this run</div>
+      </div>
+    </section>
+
+    <section class="chart panel">
+      <div class="panel-head">
+        <h2>Fidelity vs. number of qubits</h2>
+        <div class="legend">
+          <span class="lg-qpu"></span>real hardware
+          <span class="lg-sim"></span>simulation
+        </div>
+      </div>
+      <div class="plot" id="fidPlot"><svg id="fidSvg"></svg></div>
+    </section>
+
+    <section class="parity panel">
+      <div class="panel-head">
+        <h2>Parity oscillation <span id="parityTitle" class="muted"></span></h2>
+        <div id="parityMeta" class="parity-meta mono"></div>
+      </div>
+      <div class="plot" id="parPlot"><svg id="parSvg"></svg><div id="parEmpty" class="empty">Click a point or an experiment card</div></div>
+    </section>
+
+    <aside class="feed panel">
+      <div class="panel-head">
+        <h2>Agent log</h2>
+        <span id="feedCount" class="muted mono"></span>
+      </div>
+      <div id="feed" class="feed-list" aria-live="polite"></div>
+      <button id="feedJump" class="feed-jump" hidden>↓ latest</button>
+    </aside>
+  </main>
+
+  <footer class="transport">
+    <button id="playBtn" class="play" aria-label="Play">
+      <svg viewBox="0 0 24 24" class="i-play"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>
+      <svg viewBox="0 0 24 24" class="i-pause"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>
+    </button>
+    <div class="seg speed" role="group" aria-label="Speed">
+      <button data-speed="1" class="on">1×</button>
+      <button data-speed="5">5×</button>
+      <button data-speed="20">20×</button>
+      <button data-speed="60">60×</button>
+    </div>
+    <div class="scrub">
+      <div id="ticks" class="ticks"></div>
+      <input id="scrub" type="range" min="0" max="0" value="0" step="1" aria-label="Timeline">
+    </div>
+    <div class="clock mono">
+      <div id="clockTime">--:--:--</div>
+      <div id="clockSub" class="muted">event 0 / 0</div>
+    </div>
+  </footer>
+
+  <div id="tooltip" class="tooltip" hidden></div>
+  <script src="app.js"></script>
+</body>
+</html>

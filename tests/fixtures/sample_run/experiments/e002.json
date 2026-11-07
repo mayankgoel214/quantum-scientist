@@ -1,0 +1,248 @@
+{
+ "exp_id": "e002",
+ "spec": {
+  "n_qubits": 16,
+  "layout_strategy": "bfs_tree",
+  "root": null,
+  "exclude_qubits": [],
+  "circuit_variant": "tree",
+  "dynamical_decoupling": true,
+  "measure_twirling": true,
+  "readout_mitigation": true,
+  "shots": 1000,
+  "mode": "sim",
+  "hypothesis": "Doubling N in simulation to see how fast fidelity decays."
+ },
+ "physical_qubits": [
+  47,
+  48,
+  57,
+  46,
+  45,
+  44,
+  37,
+  25,
+  26,
+  24,
+  23,
+  27,
+  49,
+  50,
+  38,
+  29
+ ],
+ "tree_edges": [
+  [
+   47,
+   48
+  ],
+  [
+   47,
+   57
+  ],
+  [
+   47,
+   46
+  ],
+  [
+   46,
+   45
+  ],
+  [
+   45,
+   44
+  ],
+  [
+   45,
+   37
+  ],
+  [
+   37,
+   25
+  ],
+  [
+   25,
+   26
+  ],
+  [
+   25,
+   24
+  ],
+  [
+   24,
+   23
+  ],
+  [
+   26,
+   27
+  ],
+  [
+   48,
+   49
+  ],
+  [
+   49,
+   50
+  ],
+  [
+   49,
+   38
+  ],
+  [
+   38,
+   29
+  ]
+ ],
+ "root": 47,
+ "circuit_depth": 9,
+ "two_qubit_gate_count": 15,
+ "fidelity": 0.861,
+ "ci_low": 0.847,
+ "ci_high": 0.875,
+ "populations": 0.9324,
+ "coherence": 0.7896,
+ "parity_curve": [
+  {
+   "phi": 0.0,
+   "parity": 0.7286
+  },
+  {
+   "phi": 0.1848,
+   "parity": -0.7938
+  },
+  {
+   "phi": 0.369599,
+   "parity": 0.6964
+  },
+  {
+   "phi": 0.554399,
+   "parity": -0.6686
+  },
+  {
+   "phi": 0.739198,
+   "parity": 0.596
+  },
+  {
+   "phi": 0.923998,
+   "parity": -0.4883
+  },
+  {
+   "phi": 1.108797,
+   "parity": 0.2604
+  },
+  {
+   "phi": 1.293597,
+   "parity": -0.2389
+  },
+  {
+   "phi": 1.478397,
+   "parity": 0.0718
+  },
+  {
+   "phi": 1.663196,
+   "parity": 0.078
+  },
+  {
+   "phi": 1.847996,
+   "parity": -0.2766
+  },
+  {
+   "phi": 2.032795,
+   "parity": 0.3378
+  },
+  {
+   "phi": 2.217595,
+   "parity": -0.5183
+  },
+  {
+   "phi": 2.402394,
+   "parity": 0.5594
+  },
+  {
+   "phi": 2.587194,
+   "parity": -0.6386
+  },
+  {
+   "phi": 2.771994,
+   "parity": 0.7139
+  },
+  {
+   "phi": 2.956793,
+   "parity": -0.7861
+  },
+  {
+   "phi": 3.141593,
+   "parity": 0.832
+  },
+  {
+   "phi": 3.326392,
+   "parity": -0.807
+  },
+  {
+   "phi": 3.511192,
+   "parity": 0.7403
+  },
+  {
+   "phi": 3.695991,
+   "parity": -0.6747
+  },
+  {
+   "phi": 3.880791,
+   "parity": 0.5925
+  },
+  {
+   "phi": 4.06559,
+   "parity": -0.5277
+  },
+  {
+   "phi": 4.25039,
+   "parity": 0.3588
+  },
+  {
+   "phi": 4.43519,
+   "parity": -0.1669
+  },
+  {
+   "phi": 4.619989,
+   "parity": 0.015
+  },
+  {
+   "phi": 4.804789,
+   "parity": 0.1063
+  },
+  {
+   "phi": 4.989588,
+   "parity": -0.214
+  },
+  {
+   "phi": 5.174388,
+   "parity": 0.3316
+  },
+  {
+   "phi": 5.359187,
+   "parity": -0.4053
+  },
+  {
+   "phi": 5.543987,
+   "parity": 0.619
+  },
+  {
+   "phi": 5.728787,
+   "parity": -0.7244
+  },
+  {
+   "phi": 5.913586,
+   "parity": 0.7474
+  },
+  {
+   "phi": 6.098386,
+   "parity": -0.763
+  }
+ ],
+ "certified": true,
+ "qpu_seconds": 0.0,
+ "wall_seconds": 27.3,
+ "backend": "fake_fez (aer, noisy)",
+ "job_ids": [],
+ "error": null
+}

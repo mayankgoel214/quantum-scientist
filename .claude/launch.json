@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ui",
+      "runtimeExecutable": "uv",
+      "runtimeArgs": ["run", "python", "-m", "scripts.serve_ui"],
+      "port": 8765
+    }
+  ]
+}
