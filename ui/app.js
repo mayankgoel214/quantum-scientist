@@ -82,14 +82,7 @@ function applyEvent(m, ev) {
       }
       e.result = d; e.resultSeq = ev.seq; e.endTs = ev.ts;
       m.current = d.exp_id;
-      if (isCertified(d)) {
-        const k = modeOf(e) === 'qpu' ? 'qpu' : 'sim';
-        const b = m.best[k];
-        const n = d.n_qubits ?? (d.physical_qubits || []).length;
-        if (!b || n > b.n || (n === b.n && d.fidelity > b.fidelity)) {
-          m.best[k] = { n, fidelity: d.fidelity, ci_low: d.ci_low, ci_high: d.ci_high, id: d.exp_id };
-        }
-      }
+      recomputeBest(m);
       break;
     }
     case 'budget':
@@ -181,6 +174,26 @@ function schedule(root, edges) {
     });
   }
   return { layer, depth };
+}
+
+// Best certified result per mode. A result whose pre-registered confirmation re-run (spec.confirmation_of)
+// failed is withdrawn, exactly as in the paper.
+function recomputeBest(m) {
+  const failed = new Set(), passed = new Set();
+  for (const e of m.exps.values()) {
+    const of = e.spec && e.spec.confirmation_of;
+    if (of && e.result && !e.result.error) (isCertified(e.result) ? passed : failed).add(of);
+  }
+  const best = { sim: null, qpu: null };
+  for (const e of m.exps.values()) {
+    const d = e.result;
+    if (!d || !isCertified(d) || (failed.has(e.id) && !passed.has(e.id))) continue;
+    const k = modeOf(e) === 'qpu' ? 'qpu' : 'sim';
+    const n = d.n_qubits ?? (d.physical_qubits || []).length;
+    const b = best[k];
+    if (!b || n > b.n || (n === b.n && d.fidelity > b.fidelity)) best[k] = { n, fidelity: d.fidelity, ci_low: d.ci_low, ci_high: d.ci_high, id: d.exp_id };
+  }
+  m.best = best;
 }
 
 /* ================================================================ API */

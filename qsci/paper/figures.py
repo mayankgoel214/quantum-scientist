@@ -213,6 +213,7 @@ def fig_timeline(facts: RunFacts, path: Path) -> Path:
         best = 0
         labelled: list[tuple[float, int]] = []
         rec_x, rec_y = [0.0], [0]
+        seen_qpu = []
         for e in facts.experiments:
             x = hrs(e.started or e.finished)
             marker = "o" if e.mode == "qpu" else "s"
@@ -226,9 +227,16 @@ def fig_timeline(facts: RunFacts, path: Path) -> Path:
             if e.mode == "qpu" and all(abs(x - px) > 0.035 * span or pn != e.n for px, pn in labelled):
                 ax.annotate(e.exp_id, (x, e.n), xytext=(0, 5.5), textcoords="offset points", ha="center", fontsize=5.6, color="#777")
                 labelled.append((x, e.n))
-            if e.mode == "qpu" and e.certified and e.n > best:
-                best = e.n
-                rec_x.append(x); rec_y.append(best)
+            if e.mode == "qpu":  # record so far; drops when a confirmation re-run refutes it
+                seen_qpu.append(e)
+                conf_failed = {c.spec.get("confirmation_of") for c in seen_qpu if c.ok and c.spec.get("confirmation_of")
+                               and not c.certified}
+                conf_ok = {c.spec.get("confirmation_of") for c in seen_qpu if c.ok and c.certified and c.spec.get("confirmation_of")}
+                nb = max([c.n for c in seen_qpu if c.ok and c.certified
+                          and not (c.exp_id in conf_failed and c.exp_id not in conf_ok)], default=0)
+                if nb != best:
+                    best = nb
+                    rec_x.append(x); rec_y.append(best)
         end = hrs(facts.finished_at)
         rec_x.append(end); rec_y.append(best)
         ax.step(rec_x, rec_y, where="post", color=HW, lw=1.0, alpha=0.6, zorder=2)

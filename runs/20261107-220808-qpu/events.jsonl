@@ -56,3 +56,5 @@
 {"ts": "2026-11-08T09:45:33+00:00", "seq": 55, "type": "budget", "data": {"llm_calls": 16, "max_llm_calls": 16, "qpu_seconds": 322.0, "max_qpu_seconds": 480.0}}
 {"ts": "2026-11-08T09:45:33+00:00", "seq": 56, "type": "thought", "data": {"text": "[prediction check] e010 (N=36, weighted_tree): my digital twin predicted F=0.776 before submission; hardware measured F=0.489 (-0.287). Not certified."}}
 {"ts": "2026-11-08T09:45:33+00:00", "seq": 57, "type": "run_finished", "data": {"best_certified_n": 40, "best_exp_id": "e005", "summary": "Largest certified GHZ on hardware: N=40 (F=0.654)"}}
+{"ts": "2026-11-08T09:52:00+00:00", "seq": 58, "type": "milestone", "data": {"text": "[confirmation, logged at audit] e009 re-ran e005 on the same qubits with 2000 shots: F=0.414 [0.326,0.486]. Not certified, so the N=40 result is withdrawn as a likely upward fluctuation.", "n_qubits": 40, "fidelity": 0.41435}}
+{"ts": "2026-11-08T09:52:00+00:00", "seq": 59, "type": "run_finished", "data": {"best_certified_n": 24, "best_exp_id": "e011", "summary": "Largest confirmed certified GHZ on hardware: N=24 (F=0.842); N=40 withdrawn after failed confirmation."}}

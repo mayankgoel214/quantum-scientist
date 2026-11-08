@@ -294,11 +294,20 @@ def cmd_submit(args) -> Path:
 
 
 # ------------------------------------------------------------------------------------------ collect
+def _withdrawn(rows: list[dict]) -> set[str]:
+    """Certified results whose pre-registered confirmation re-run(s) all failed."""
+    failed = {r["spec"].get("confirmation_of") for r in rows if r["spec"].get("confirmation_of") and r.get("fidelity") is not None
+              and not r.get("certified")}
+    passed = {r["spec"].get("confirmation_of") for r in rows if r["spec"].get("confirmation_of") and r.get("certified")}
+    return {x for x in failed if x not in passed}
+
+
 def _best_certified(run_dir: Path):
+    rows = [json.loads(f.read_text()) for f in (run_dir / "experiments").glob("*.json")]
+    gone = _withdrawn(rows)
     best = None
-    for f in (run_dir / "experiments").glob("*.json"):
-        r = json.loads(f.read_text())
-        if r.get("certified") and (best is None or r["spec"]["n_qubits"] > best["spec"]["n_qubits"]):
+    for r in rows:
+        if r.get("certified") and r["exp_id"] not in gone and (best is None or r["spec"]["n_qubits"] > best["spec"]["n_qubits"]):
             best = r
     return best
 
@@ -361,6 +370,15 @@ def collect_once(run_dir: Path, service=None) -> bool:
         elif result.get("certified") and (prev_best is None or s["n_qubits"] > prev_best["spec"]["n_qubits"]):
             log.emit("milestone", text=f"New hardware record: {s['n_qubits']}-qubit GHZ entanglement certified "
                      f"(F={result['fidelity']:.3f} [{result['ci_low']:.3f},{result['ci_high']:.3f}], {exp_id})",
+                     n_qubits=s["n_qubits"], fidelity=result["fidelity"])
+        orig = s.get("confirmation_of")
+        if orig and not result.get("error"):
+            ok = bool(result.get("certified"))
+            log.emit("milestone" if not ok else "thought",
+                     text=(f"[confirmation] {exp_id} re-ran {orig} on the same qubits with {s.get('shots')} shots: "
+                           f"F={result['fidelity']:.3f} [{result['ci_low']:.3f},{result['ci_high']:.3f}]. "
+                           + (f"Confirmed: {orig} stands." if ok else
+                              f"Not certified, so I withdraw {orig}'s N={s['n_qubits']} result as a likely upward fluctuation.")),
                      n_qubits=s["n_qubits"], fidelity=result["fidelity"])
         f = result.get("fidelity")
         pred = (entry.get("predicted") or {}).get("fidelity")

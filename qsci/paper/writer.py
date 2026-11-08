@@ -223,9 +223,14 @@ class Paper:
         budget = (f", spending {f.qpu_seconds_used:.0f} s of a {f.max_qpu_seconds:.0f} s QPU budget"
                   if self.n_qpu and f.max_qpu_seconds else "")
         if f.batch:
-            how = (f"{self.planner_phrase()} designed a batch of {len(self.f.pending) or self.n_qpu} hardware experiments in a single planning step "
-                   f"({self.n_qpu} had returned from the queue when this paper was generated) "
-                   f"(the public queue made adaptive scheduling impossible); before submission every experiment was predicted by a "
+            r1 = [p for p in self.f.pending if (p.get("round") or 1) == 1]
+            r2 = [p for p in self.f.pending if (p.get("round") or 1) == 2]
+            back = "" if self.n_qpu >= len(self.f.pending) else f" ({self.n_qpu} had returned from the queue when this paper was generated)"
+            how = (f"{self.planner_phrase()} designed a batch of {len(r1) or self.n_qpu} hardware experiments in a single planning step "
+                   f"(the public queue made adaptive scheduling impossible)"
+                   + (f" and, after reading every result, a second round of {len(r2)} that included a pre-registered confirmation of its own record"
+                      if r2 else "")
+                   + f"{back}; before submission every experiment was predicted by a "
                    f"digital twin, a noise simulation driven by the live calibration{budget}. ")
         else:
             how = (f"{self.planner_phrase()} planned, executed and interpreted {self.n_exp} experiments "
@@ -248,6 +253,14 @@ class Paper:
                          f"(F = {s.fidelity:.3f}, CI {s.ci_low:.3f}–{s.ci_high:.3f}).")
         else:
             parts.append("No experiment met the certification criterion.")
+        if r:
+            same = [e for e in f.by_mode("qpu") if e.ok and e.certified and e.n == r.n]
+            if len(same) > 1:
+                parts.append(f"N = {r.n} certified in {len(same)} independent hardware experiments with different layouts.")
+        for orig, conf in f.refutations():
+            parts.append(f"An apparent N = {orig.n} record (F = {orig.fidelity:.3f}, CI {orig.ci_low:.3f}–{orig.ci_high:.3f}) failed its "
+                         f"pre-registered confirmation on the same qubits (F = {conf.fidelity:.3f}, CI {conf.ci_low:.3f}–{conf.ci_high:.3f}, "
+                         f"{conf.spec.get('shots')} shots), so the agent withdrew it.")
         for lp in self.f.layout_pairs():
             t, c = lp["tree"], lp["chain"]
             parts.append(f"At N = {lp['n']} the error-aware tree layout reached F = {t.fidelity:.3f} versus {c.fidelity:.3f} for the "
@@ -435,6 +448,15 @@ verbatim, follows.</p>
         else:
             out.append("<p>No hardware experiment met the certification criterion "
                        f"({self.n_qpu} hardware experiment{'s' if self.n_qpu != 1 else ''} attempted).</p>")
+        for orig, conf in f.refutations():
+            out.append(
+                f"<p><b>A withdrawn record.</b> In the first round, {orig.exp_id} certified an N = {orig.n} state with "
+                f"<i>F</i> = {orig.fidelity:.3f} [{orig.ci_low:.3f}, {orig.ci_high:.3f}], a lower bound only {orig.ci_low - 0.5:.3f} above the "
+                f"threshold, while the smaller N = {', '.join(str(e.n) for e in f.by_mode('qpu') if e.ok and not e.certified and e.n < orig.n and e.spec.get('layout_strategy') == orig.spec.get('layout_strategy') and (e.raw.get('spec') or {}).get('confirmation_of') is None) or '–'} "
+                f"tree states did not certify. Its validator-enforced confirmation, {conf.exp_id}, re-ran the identical specification on the same physical qubits "
+                f"with {conf.spec.get('shots')} shots and measured <i>F</i> = {conf.fidelity:.3f} [{conf.ci_low:.3f}, {conf.ci_high:.3f}]: not certified. "
+                f"The agent therefore does not claim N = {orig.n}; the first result is best read as an upward fluctuation selected from several noisy attempts, "
+                f"possibly compounded by calibration drift between the two runs. This is the selection effect discussed in Section 5, observed directly.</p>")
         if s and not f.batch:
             out.append(f"<p>In the noisy simulator the largest certified state has <b>N = {s.n}</b> ({s.exp_id}, "
                        f"<i>F</i> = {s.fidelity:.3f}, CI [{s.ci_low:.3f}, {s.ci_high:.3f}]).</p>")
@@ -546,8 +568,15 @@ bootstrap confidence interval; ✓ = certified (<i>F</i><sub>low</sub> &gt; 1/2)
                 f"experiment or between experiments. More importantly, the agent chose which configurations to run and which "
                 f"result to call a record: {n_attempts} {'hardware' if r.mode == 'qpu' else 'simulator'} experiments were run within four qubits "
                 f"of the record size, and reporting the best of several noisy estimates biases the headline upward. "
-                f"No correction for this selection was applied. A pre-registered confirmation run of the identical "
-                f"specification, ideally with more shots, is the appropriate next step before treating N = {r.n} as established."
+                f"No correction for this selection was applied. "
+                + (f"The danger is not hypothetical: in this run an apparent N = {f.refutations()[0][0].n} record failed its pre-registered "
+                   f"confirmation and was withdrawn (Section 4). "
+                   if f.refutations() else "")
+                + (f"The N = {r.n} record itself was certified in {len([e for e in f.by_mode(r.mode) if e.ok and e.certified and e.n == r.n])} "
+                   f"independent experiments, which mitigates but does not remove this concern."
+                   if len([e for e in f.by_mode(r.mode) if e.ok and e.certified and e.n == r.n]) > 1 else
+                   f"A pre-registered confirmation run of the identical specification, ideally with more shots, is the appropriate next "
+                   f"step before treating N = {r.n} as established.")
             )
         if self.mit["rem"] or self.mit["twirl"]:
             paras.append(

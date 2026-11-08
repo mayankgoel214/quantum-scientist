@@ -79,9 +79,23 @@ class RunFacts:
     def by_mode(self, mode: str) -> list[Experiment]:
         return [e for e in self.experiments if e.mode == mode]
 
+    def confirmations_of(self, e: Experiment) -> list[Experiment]:
+        """Pre-registered re-runs of `e` (spec.confirmation_of == e.exp_id) that returned data."""
+        return [x for x in self.experiments  # same mode only: a twin prediction is not a confirmation
+                if x.ok and x.mode == e.mode and x.spec.get("confirmation_of") == e.exp_id]
+
+    def refuted(self, e: Experiment) -> bool:
+        """A certified result whose confirmation re-run(s) all failed to certify."""
+        cs = self.confirmations_of(e)
+        return bool(cs) and not any(c.certified for c in cs)
+
+    def refutations(self) -> list[tuple[Experiment, Experiment]]:
+        return [(e, self.confirmations_of(e)[0]) for e in self.experiments
+                if e.ok and e.certified and self.refuted(e)]
+
     def record(self, mode: str) -> Experiment | None:
-        """Largest certified N in a mode; ties broken by higher CI lower bound."""
-        cands = [e for e in self.by_mode(mode) if e.ok and e.certified]
+        """Largest certified N in a mode whose confirmation (if one ran) did not fail; ties -> higher CI lower bound."""
+        cands = [e for e in self.by_mode(mode) if e.ok and e.certified and not self.refuted(e)]
         if not cands:
             return None
         return max(cands, key=lambda e: (e.n, e.ci_low or 0))

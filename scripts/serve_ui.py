@@ -71,13 +71,21 @@ def _summary(run_dir: Path) -> dict:
     finished = next((e for e in events if e.get("type") == "run_finished"), None)
     best = {"sim": 0, "qpu": 0}
     n_exp = 0
+    conf_of = {(e.get("data") or {}).get("exp_id"): ((e.get("data") or {}).get("spec") or {}).get("confirmation_of")
+               for e in events if e.get("type") == "experiment_started"}
+    results = []
     for e in events:
         if e.get("type") != "experiment_result":
             continue
         n_exp += 1
         d = e.get("data") or {}
         lo = d.get("ci_low")
-        if d.get("error") is None and isinstance(lo, (int, float)) and lo > 0.5:
+        results.append((d, d.get("error") is None and isinstance(lo, (int, float)) and lo > 0.5))
+    # a result whose pre-registered confirmation re-run failed is withdrawn (same rule as the paper and the UI)
+    failed = {conf_of.get(d.get("exp_id")) for d, ok in results if conf_of.get(d.get("exp_id")) and d.get("error") is None and not ok}
+    passed = {conf_of.get(d.get("exp_id")) for d, ok in results if conf_of.get(d.get("exp_id")) and ok}
+    for d, ok in results:
+        if ok and not (d.get("exp_id") in failed and d.get("exp_id") not in passed):
             m = d.get("mode", "sim")
             best[m] = max(best.get(m, 0), int(d.get("n_qubits") or 0))
     sd = (started or {}).get("data", {})

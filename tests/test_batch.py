@@ -34,3 +34,26 @@ def test_validator_drops_garbage():
 def test_chain_uses_linear_circuit():
     assert _full_spec({"n_qubits": 24, "layout_strategy": "best_chain"})["circuit_variant"] == "linear"
     assert _full_spec({"n_qubits": 24, "layout_strategy": "weighted_tree"})["circuit_variant"] == "tree"
+
+
+def test_failed_confirmation_withdraws_record():
+    from pathlib import Path
+    from qsci.paper.data import Experiment, RunFacts
+
+    def ex(i, n, lo, conf=None):
+        spec = {"n_qubits": n, "layout_strategy": "weighted_tree"}
+        if conf:
+            spec["confirmation_of"] = conf
+        return Experiment(i, "qpu", n, {"spec": spec, "fidelity": lo + 0.05, "ci_low": lo, "ci_high": lo + 0.1})
+
+    exps = [ex("e1", 24, 0.70), ex("e2", 40, 0.52), ex("e3", 40, 0.33, conf="e2")]
+    f = RunFacts(Path("."), "r", {}, [], exps, None)
+    assert f.refuted(exps[1]) and f.record("qpu").exp_id == "e1"
+    assert [(a.exp_id, b.exp_id) for a, b in f.refutations()] == [("e2", "e3")]
+    exps[2].raw["ci_low"] = 0.51  # a confirmation that also certifies keeps the record
+    assert not f.refuted(exps[1]) and f.record("qpu").n == 40
+    twin = Experiment("e3-twin", "sim", 40, {"spec": {"n_qubits": 40, "confirmation_of": "e2"}, "fidelity": 0.7,
+                                             "ci_low": 0.68, "ci_high": 0.72})
+    exps[2].raw["ci_low"] = 0.33
+    f2 = RunFacts(Path("."), "r", {}, [], exps + [twin], None)
+    assert f2.refuted(exps[1]), "a twin prediction must not count as a confirmation"
