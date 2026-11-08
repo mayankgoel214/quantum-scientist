@@ -67,7 +67,8 @@ def fig_fidelity_vs_n(facts: RunFacts, path: Path) -> Path:
         ax.axhspan(0, 0.5, color="#f4f1ec", zorder=0, lw=0)
         ax.axhline(0.5, color="#555555", ls=(0, (4, 3)), lw=0.8, zorder=1)
         ax.text(min(ns_all) - 3.3, 0.507, "GME threshold  F = 0.5", ha="left", va="bottom", fontsize=6.8, color="#555555")
-        for mode, color, marker, label, dx in (("sim", SIM, "s", "Noisy simulator", -0.45), ("qpu", HW, "o", "Hardware (" + facts.backend + ")", 0.45)):
+        sim_label = "Digital twin (prediction)" if facts.batch else "Noisy simulator"
+        for mode, color, marker, label, dx in (("sim", SIM, "s", sim_label, -0.45), ("qpu", HW, "o", "Hardware (" + facts.backend + ")", 0.45)):
             exps = [e for e in facts.by_mode(mode) if e.ok]
             if not exps:
                 continue
@@ -88,7 +89,7 @@ def fig_fidelity_vs_n(facts: RunFacts, path: Path) -> Path:
                         fontsize=6.8, color=HW, arrowprops=dict(arrowstyle="-", color=HW, lw=0.6))
         handles = []
         if facts.by_mode("sim"):
-            handles.append(Line2D([], [], marker="s", color=SIM, ls="", ms=4.2, label="Noisy simulator"))
+            handles.append(Line2D([], [], marker="s", color=SIM, ls="", ms=4.2, label=sim_label))
         if facts.by_mode("qpu"):
             handles.append(Line2D([], [], marker="o", color=HW, ls="", ms=4.2, label=f"Hardware ({facts.backend})"))
         if any(e.ok and not e.certified for e in facts.experiments):
@@ -269,6 +270,45 @@ def fig_timeline(facts: RunFacts, path: Path) -> Path:
         return _save(fig, path)
 
 
+TREE_C = HW
+CHAIN_C = "#b5443b"
+
+
+def fig_twin_layout(facts: RunFacts, path: Path) -> Path | None:
+    """Digital-twin prediction vs hardware, error-aware tree vs textbook chain."""
+    pairs = facts.twin_pairs()
+    if not pairs:
+        return None
+    with plt.rc_context(STYLE):
+        fig, ax = plt.subplots(figsize=(COL_W, 2.55))
+        ax.axhspan(0, 0.5, color="#f4f1ec", zorder=0, lw=0)
+        ax.axhline(0.5, color="#555555", ls=(0, (4, 3)), lw=0.8, zorder=1)
+        for strat, color, label in (("weighted_tree", TREE_C, "error-aware tree"), ("best_chain", CHAIN_C, "textbook chain")):
+            sel = sorted([(hw, tw) for hw, tw in pairs if hw.spec.get("layout_strategy") == strat], key=lambda x: x[0].n)
+            if not sel:
+                continue
+            ax.plot([tw.n for _, tw in sel], [tw.fidelity for _, tw in sel], color=color, ls="--", lw=0.8, alpha=0.7,
+                    marker="s", ms=3.6, mfc="white", mec=color, zorder=3)
+            for hw, _ in sel:
+                lo = hw.fidelity - hw.ci_low
+                hi = hw.ci_high - hw.fidelity
+                ax.errorbar(hw.n, hw.fidelity, yerr=[[lo], [hi]], fmt="o", ms=4.4, color=color,
+                            mfc=color if hw.certified else "white", mec=color, mew=0.9, elinewidth=0.8, capsize=1.8, zorder=4)
+        handles = [Line2D([], [], color=TREE_C, marker="o", ls="", ms=4.2, label="tree, hardware"),
+                   Line2D([], [], color=TREE_C, marker="s", mfc="white", ls="--", lw=0.8, ms=3.6, label="tree, twin prediction")]
+        if any(hw.spec.get("layout_strategy") == "best_chain" for hw, _ in pairs):
+            handles += [Line2D([], [], color=CHAIN_C, marker="o", ls="", ms=4.2, label="chain, hardware"),
+                        Line2D([], [], color=CHAIN_C, marker="s", mfc="white", ls="--", lw=0.8, ms=3.6, label="chain, twin prediction")]
+        ax.legend(handles=handles, loc="lower left", handletextpad=0.3, borderaxespad=0.2, ncol=1)
+        ns = [hw.n for hw, _ in pairs]
+        ax.set_xlim(min(ns) - 4, max(ns) + 4)
+        lows = [hw.ci_low for hw, _ in pairs] + [tw.fidelity for _, tw in pairs]
+        ax.set_ylim(max(0.0, min(min(lows) - 0.08, 0.42)), 1.02)
+        ax.set_xlabel("Number of qubits $N$")
+        ax.set_ylabel("GHZ fidelity $F$")
+        return _save(fig, path)
+
+
 def make_all(facts: RunFacts, out_dir: Path) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     rec = facts.record_overall()
@@ -282,4 +322,7 @@ def make_all(facts: RunFacts, out_dir: Path) -> dict:
     if facts.calibration.get("qubits"):
         figs["chip"] = fig_chip_map(facts, chip_exp, out_dir / "fig_chip_map.png")
     figs["timeline"] = fig_timeline(facts, out_dir / "fig_timeline.png")
+    tl = fig_twin_layout(facts, out_dir / "fig_twin_layout.png")
+    if tl:
+        figs["twin"] = tl
     return {"paths": figs, "parity_exp": parity_exp, "parity_fit": fit, "chip_exp": chip_exp}

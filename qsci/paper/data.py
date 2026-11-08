@@ -72,6 +72,8 @@ class RunFacts:
     run_started: dict = field(default_factory=dict)
     run_finished: dict = field(default_factory=dict)
     thoughts: list[dict] = field(default_factory=list)
+    batch: bool = False                      # queue-aware batch run (scripts/qpu_batch.py)
+    pending: list[dict] = field(default_factory=list)
 
     # ---- convenience selectors -------------------------------------------------
     def by_mode(self, mode: str) -> list[Experiment]:
@@ -208,6 +210,25 @@ class RunFacts:
             out.append((n, sims[n], hws[n]))
         return out
 
+    def twin_pairs(self) -> list[tuple[Experiment, Experiment]]:
+        """(hardware experiment, its digital-twin prediction) for every successful hardware run."""
+        twins = {e.raw.get("twin_of"): e for e in self.experiments if e.raw.get("twin_of")}
+        return [(e, twins[e.exp_id]) for e in self.by_mode("qpu") if e.ok and e.exp_id in twins]
+
+    def layout_pairs(self) -> list[dict]:
+        """Matched-N hardware comparisons of the error-aware tree vs the textbook chain."""
+        twins = {e.raw.get("twin_of"): e for e in self.experiments if e.raw.get("twin_of")}
+        by = {}
+        for e in self.by_mode("qpu"):
+            if e.ok:
+                by.setdefault(e.n, {})[e.spec.get("layout_strategy")] = e
+        out = []
+        for n in sorted(by):
+            t, c = by[n].get("weighted_tree"), by[n].get("best_chain")
+            if t and c:
+                out.append({"n": n, "tree": t, "chain": c, "tree_twin": twins.get(t.exp_id), "chain_twin": twins.get(c.exp_id)})
+        return out
+
     def gated_fraction(self) -> tuple[int, int]:
         """How many hardware experiments were preceded by a simulation at >= the same N."""
         gated = total = 0
@@ -278,6 +299,24 @@ def load_run(run_dir: Path) -> RunFacts:
         if ev.get("type") == "experiment_result" and d.get("exp_id") and d["exp_id"] not in raw_by_id:
             raw_by_id[d["exp_id"]] = {**d, "spec": {"n_qubits": d.get("n_qubits"), "mode": d.get("mode")}}
 
+    pending = []
+    if (run_dir / "pending.json").exists():
+        try:
+            pending = json.loads((run_dir / "pending.json").read_text())
+        except json.JSONDecodeError:
+            pending = []
+        for entry in pending:  # digital-twin predictions become simulator experiments "<id>-twin"
+            pred = entry.get("predicted") or {}
+            if pred.get("fidelity") is None:
+                continue
+            tid = f"{entry['exp_id']}-twin"
+            raw_by_id[tid] = {"exp_id": tid, "twin_of": entry["exp_id"],
+                              "spec": {**entry["spec"], "mode": "sim"}, "fidelity": pred["fidelity"],
+                              "ci_low": pred.get("ci_low"), "ci_high": pred.get("ci_high"),
+                              "certified": pred.get("certified"), "physical_qubits": (entry.get("plan") or {}).get("qubits"),
+                              "circuit_depth": entry.get("circuit_depth"), "sim_method": "pauli_frame (digital twin, live calibration)"}
+            started_ts[tid] = started_ts.get(entry["exp_id"])
+
     exps = []
     for exp_id, d in raw_by_id.items():
         spec = d.get("spec") or {}
@@ -305,4 +344,5 @@ def load_run(run_dir: Path) -> RunFacts:
         run_dir=run_dir, run_id=run_id, calibration=calibration, events=events,
         experiments=exps, budget=budget, run_started=rs, run_finished=last("run_finished"),
         thoughts=[ev for ev in events if ev.get("type") == "thought" and (ev.get("data") or {}).get("text")],
+        batch=bool(pending), pending=pending,
     )

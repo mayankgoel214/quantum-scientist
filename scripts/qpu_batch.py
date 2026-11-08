@@ -308,7 +308,8 @@ def collect_once(run_dir: Path, service=None) -> bool:
     pend_path = run_dir / "pending.json"
     pending = json.loads(pend_path.read_text())
     log = EventLog(run_dir)
-    budget = Budget(run_dir, max_llm_calls=1, max_qpu_seconds=float(json.loads((run_dir / "budget.json").read_text())["max_qpu_seconds"]))
+    _bj = json.loads((run_dir / "budget.json").read_text())
+    budget = Budget(run_dir, max_llm_calls=int(_bj.get("max_llm_calls", 1)), max_qpu_seconds=float(_bj["max_qpu_seconds"]))
     service = service or _service()
     (run_dir / "experiments").mkdir(exist_ok=True)
     left = 0
@@ -362,17 +363,167 @@ def collect_once(run_dir: Path, service=None) -> bool:
                      f"(F={result['fidelity']:.3f} [{result['ci_low']:.3f},{result['ci_high']:.3f}], {exp_id})",
                      n_qubits=s["n_qubits"], fidelity=result["fidelity"])
         f = result.get("fidelity")
+        pred = (entry.get("predicted") or {}).get("fidelity")
+        if f is not None and pred is not None:
+            log.emit("thought", text=(f"[prediction check] {exp_id} (N={s['n_qubits']}, {s['layout_strategy']}): my digital twin "
+                                      f"predicted F={pred:.3f} before submission; hardware measured F={f:.3f} "
+                                      f"({f - pred:+.3f}). " + ("Certified." if result.get("certified") else "Not certified.")))
         print(f"  {exp_id} N={s['n_qubits']} {s['layout_strategy']}: "
               + (f"F={f:.3f} [{result['ci_low']:.3f},{result['ci_high']:.3f}] certified={result['certified']}" if f is not None
                  else f"ERROR {result['error']}"))
     pend_path.write_text(json.dumps(pending, indent=1, default=str))
-    if left == 0 and not any(e["type"] == "run_finished" for e in read_events(run_dir)):
+    evs = read_events(run_dir)
+    last_fin = max((e["seq"] for e in evs if e["type"] == "run_finished"), default=-1)
+    last_start = max((e["seq"] for e in evs if e["type"] == "experiment_started"), default=-1)
+    if left == 0 and last_fin < last_start:
         best = _best_certified(run_dir)
         log.emit("run_finished", best_certified_n=best["spec"]["n_qubits"] if best else None,
                  best_exp_id=best["exp_id"] if best else None,
                  summary=(f"Largest certified GHZ on hardware: N={best['spec']['n_qubits']} (F={best['fidelity']:.3f})"
                           if best else "No GHZ size certified on hardware in this batch."))
     return left == 0
+
+
+def _round2_plan(run_dir: Path, budget_left: float) -> tuple[list[dict], str, str] | None:
+    key = (os.environ.get("GEMINI_API_KEY") or "").strip()
+    if not key:
+        return None
+    model = (os.environ.get("GEMINI_MODEL") or "gemini-2.5-flash").split("#")[0].strip() or "gemini-2.5-flash"
+    pend = json.loads((run_dir / "pending.json").read_text())
+    rows = []
+    for e in pend:
+        f = run_dir / "experiments" / f"{e['exp_id']}.json"
+        r = json.loads(f.read_text()) if f.exists() else {}
+        rows.append({"exp_id": e["exp_id"], "N": e["spec"]["n_qubits"], "layout": e["spec"]["layout_strategy"],
+                     "shots": e["spec"]["shots"], "twin_predicted_F": round((e.get("predicted") or {}).get("fidelity") or 0, 3),
+                     "hardware_F": None if r.get("fidelity") is None else round(r["fidelity"], 3),
+                     "hardware_ci": None if r.get("ci_low") is None else [round(r["ci_low"], 3), round(r["ci_high"], 3)],
+                     "certified": r.get("certified"), "error": r.get("error"), "qpu_seconds_billed": r.get("qpu_seconds")})
+    costs = {f"N={n},shots={sh}": estimate_qpu_seconds({"n_qubits": n, "shots": sh, "mode": "qpu"})
+             for n in (16, 24, 28, 32, 36, 40) for sh in (1000, 2000)}
+    prompt = f"""You are Q-Scientist, an autonomous experimental physicist. Your first hardware batch on real IBM
+hardware has finished. Results (your digital-twin prediction was frozen BEFORE each job ran):
+{json.dumps(rows, indent=1)}
+
+You have {budget_left:.0f} QPU seconds left. Estimated cost table (conservative; actual billing has been about half):
+{json.dumps(costs)}
+
+Design ROUND 2 (at most 4 experiments). Hard requirements (a validator enforces them):
+- a CONFIRMATION re-run of your largest certified hardware result: identical N and layout, 2000 shots. A record chosen
+  as the best of several noisy runs is biased upward; an independent repeat is the honest test.
+- use what you learned: e.g. probe sizes between your largest certified and smallest uncertified N, and/or a second
+  tree-vs-chain matched pair if the first comparison was inconclusive.
+layout_strategy: weighted_tree | bfs_tree | best_chain. shots: 1000 or 2000.
+
+Return JSON: {{"analysis": "3-5 sentences: what the hardware results and the twin's errors taught you",
+"rationale": "2-3 sentences on why this round-2 design", "experiments": [{{"n_qubits": int, "layout_strategy": str,
+"shots": int, "hypothesis": "one sentence"}}]}}"""
+    try:
+        r = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+            headers={"x-goog-api-key": key, "Content-Type": "application/json"},
+            json={"contents": [{"role": "user", "parts": [{"text": prompt}]}],
+                  "generationConfig": {"responseMimeType": "application/json", "temperature": 0.4,
+                                       "maxOutputTokens": 16384, "thinkingConfig": {"thinkingBudget": 4096}}},
+            timeout=180,
+        )
+        r.raise_for_status()
+        data = json.loads(r.json()["candidates"][0]["content"]["parts"][0]["text"])
+        text = (str(data.get("analysis", "")) + " " + str(data.get("rationale", ""))).strip()
+        return list(data["experiments"]), text, f"gemini:{model}"
+    except Exception as e:
+        print(f"Gemini round-2 planning failed ({type(e).__name__}: {str(e)[:200]})")
+        return None
+
+
+def cmd_extend(args) -> None:
+    """Round 2: the agent reads the hardware results and designs a follow-up inside the same run."""
+    _load_env()
+    run_dir = Path(args.run_dir)
+    cal = json.loads((run_dir / "calibration.json").read_text())
+    backend = get_backend("qpu", cal["backend"])
+    bj = json.loads((run_dir / "budget.json").read_text())
+    budget_left = float(bj["max_qpu_seconds"]) - float(bj["qpu_seconds"])
+    pend = json.loads((run_dir / "pending.json").read_text())
+    if any(e["status"] == "submitted" for e in pend):
+        print("round 1 still running; extend refused")
+        return
+    best = _best_certified(run_dir)
+    planned = _round2_plan(run_dir, budget_left)
+    exps, text, planner = planned if planned else ([], "Round 2 (no language model): confirmation of the record.", "fixed-plan")
+    # validator: confirmation of the record is mandatory
+    exps = [e for e in exps if isinstance(e, dict)]
+    if best:
+        bs = best["spec"]
+        if not any(int(e.get("n_qubits", 0)) == bs["n_qubits"] and e.get("layout_strategy") == bs["layout_strategy"] for e in exps):
+            exps.insert(0, {"n_qubits": bs["n_qubits"], "layout_strategy": bs["layout_strategy"], "shots": 2000,
+                            "hypothesis": "added by validator: confirmation re-run of the record"})
+        for e in exps:  # the confirmation runs at 2000 shots
+            if int(e.get("n_qubits", 0)) == bs["n_qubits"] and e.get("layout_strategy") == bs["layout_strategy"]:
+                e["shots"] = 2000
+                e["confirmation_of"] = best["exp_id"]
+    clean = []
+    for e in exps[:4]:
+        try:
+            n, strat, shots = int(e["n_qubits"]), str(e["layout_strategy"]), int(e.get("shots", 1000))
+        except Exception:
+            continue
+        if strat in STRATEGIES and 4 <= n <= 100:
+            clean.append({**e, "n_qubits": n, "layout_strategy": strat, "shots": 2000 if shots >= 1500 else 1000})
+    specs = []
+    for e in clean:
+        sp = _full_spec(e)
+        sp["shots"] = e["shots"]
+        if e.get("confirmation_of"):
+            sp["confirmation_of"] = e["confirmation_of"]
+        specs.append(sp)
+    while specs and sum(estimate_qpu_seconds(x) for x in specs) > budget_left:
+        drop = max((x for x in specs if not x.get("confirmation_of")), key=lambda x: x["n_qubits"], default=None)
+        if drop is None:
+            specs[0]["shots"] = 1000
+            if sum(estimate_qpu_seconds(x) for x in specs) > budget_left:
+                specs = []
+            break
+        specs.remove(drop)
+    print(f"planner={planner}\n{text}\n")
+    for sp in specs:
+        print(f"  N={sp['n_qubits']} {sp['layout_strategy']} shots={sp['shots']} est {estimate_qpu_seconds(sp):.0f}s | {sp['hypothesis']}")
+    print(f"budget left {budget_left:.0f}s")
+    if args.dry_run or not specs:
+        return
+    log = EventLog(run_dir)
+    log.emit("thought", text=("[round 2] " + text)[:1500])
+    k = len(pend)
+    for sp in specs:
+        k += 1
+        exp_id = f"e{k:03d}"
+        entry = {"exp_id": exp_id, "spec": sp, "job_id": None, "status": "new", "submitted_at": None, "round": 2}
+        try:
+            prep = prepare(sp, backend, cal)
+            entry.update({"plan": prep["plan"], "circuit_depth": prep["circuit_depth"],
+                          "two_qubit_gate_count": prep["two_qubit_gate_count"], "transpiled_depth": prep["transpiled_depth"],
+                          "num_pubs": len(build_qpu_pubs(prep)[0])})
+            try:
+                counts, _ = run_sim(prep, backend, cal)
+                fit = analyze(sp["n_qubits"], counts["populations"], counts["parity"], counts.get("cal0"), counts.get("cal1"), mitigate=True)
+                entry["predicted"] = {kk: fit[kk] for kk in ("fidelity", "ci_low", "ci_high", "certified")}
+            except Exception as ex:
+                entry["predicted"] = {"error": str(ex)[:200]}
+            job = submit_qpu(prep, backend)
+            entry.update({"job_id": job.job_id(), "status": "submitted", "submitted_at": time.time()})
+            log.emit("experiment_started", exp_id=exp_id, spec=sp)
+            print(f"  submitted {exp_id} job={entry['job_id']}")
+        except Exception as ex:
+            entry.update({"status": "failed_submit", "error": f"{type(ex).__name__}: {ex}"[:500]})
+            log.emit("error", text=f"{exp_id} submit failed: {entry['error']}")
+        pend.append(entry)
+        (run_dir / "pending.json").write_text(json.dumps(pend, indent=1, default=str))
+    if planner.startswith("gemini"):
+        bj2 = json.loads((run_dir / "budget.json").read_text())
+        bj2["llm_calls"] = int(bj2.get("llm_calls", 0)) + 1
+        bj2["max_llm_calls"] = int(bj2.get("max_llm_calls", 1)) + 1
+        (run_dir / "budget.json").write_text(json.dumps(bj2))
+        log.emit("budget", **bj2)
 
 
 def cmd_collect(args) -> None:
@@ -407,8 +558,11 @@ def main(argv=None):
     c.add_argument("--watch", action="store_true")
     c.add_argument("--interval", type=int, default=120)
     c.add_argument("--max-hours", type=float, default=9.0)
+    x = sub.add_parser("extend")
+    x.add_argument("run_dir")
+    x.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
-    return cmd_submit(args) if args.cmd == "submit" else cmd_collect(args)
+    return {"submit": cmd_submit, "collect": cmd_collect, "extend": cmd_extend}[args.cmd](args)
 
 
 if __name__ == "__main__":
