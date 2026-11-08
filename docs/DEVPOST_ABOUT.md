@@ -52,7 +52,7 @@ Q-Scientist is an autonomous AI agent (Gemini) that runs GHZ-entanglement experi
 
 ## What I learned
 - The digital twin predicted all 12 experiments would certify; only 4 did. Its overestimate grew with size, from 0.065 at 16 qubits to 0.40 at 60. Error that grows with size points to correlated noise (crosstalk, leakage) that per-gate calibration numbers don't capture.
-- Results near the threshold need confirmation. 40 qubits certified while 32 didn't, and the re-run proved it was a lucky draw. Without the confirmation step, I would have claimed a result that isn't real.
+- Results near the threshold need confirmation. 40 qubits certified while 32 didn't, and the re-run did not reproduce it (a lucky draw, possibly plus calibration drift). Without the confirmation step, I would have claimed a result that did not hold up.
 - Pre-registration matters: because the predictions were frozen before the data, the twin's miss is a real measurement, not something I could quietly tune away.
 
 ## What's next for Q-Scientist
