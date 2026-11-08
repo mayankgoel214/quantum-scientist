@@ -1,64 +1,62 @@
 ## Inspiration
-"How many qubits can this chip really entangle?" is a simple question with a hard answer. You have to choose a layout on a 156-qubit heavy-hex lattice, shape the circuit, decide on error suppression, and then *prove* entanglement rather than assume it. That loop of hypothesis → experiment → analysis is exactly what a scientist does. I wanted to see whether an AI could run that loop on real quantum hardware, honestly: recording its predictions before the data exists, and never claiming more than the data shows.
+"How many qubits can this chip really entangle?" is a simple question with a hard answer. You have to choose a layout on a 156-qubit heavy-hex lattice, shape the circuit, decide on error suppression, and then *prove* entanglement rather than assume it. That loop of hypothesis → experiment → analysis is exactly what a scientist does. I wanted to see whether an AI could run that loop on real quantum hardware, honestly: recording its predictions before the data exists, and not claiming a result until it has survived a re-run.
 
 ## What it does
 Q-Scientist is an autonomous AI agent (Gemini) that runs GHZ-entanglement experiments on IBM's real 156-qubit `ibm_fez` through Qiskit, and writes its own paper.
 
 1. **Reads the live chip.** Pulls `ibm_fez` calibration (T1/T2, readout and CZ error for every qubit and coupler) and draws the chip map.
-2. **Plans like a scientist.** Gemini designs a batch of experiments (GHZ sizes, layout strategy, shots) and writes a hypothesis for each one.
+2. **Plans like a scientist.** Gemini designs a batch of experiments (GHZ sizes, circuit layout, shots) and writes a hypothesis for each one.
 3. **Pre-registers predictions.** Before anything runs, every experiment goes through a *digital twin*, a fast noise simulator I built that is driven by the live calibration. The predictions are frozen to disk first.
 4. **Runs on real hardware.** Each experiment is one Qiskit Runtime SamplerV2 job, with dynamical decoupling, measurement twirling and the agent's chosen physical qubits pinned.
 5. **Certifies entanglement properly.** Fidelity comes from populations plus parity oscillations, with readout mitigation and bootstrap 95% confidence intervals. A state only counts as genuinely multipartite entangled if the **lower** bound is above 0.5.
-6. **Confirms before it claims.** After reading the first results, the agent runs a second round that must re-run its own record. If the re-run fails, the record is withdrawn.
-7. **Writes the paper.** A 5-page PDF with methods, figures, limitations and IBM job IDs. Every number is computed from the run log, never typed by the AI.
+6. **Confirms before it claims.** After reading the first results, Gemini designs a second round, and a validator forces it to include a pre-registered re-run of the largest certified result. If the re-run fails, that result is not claimed.
+7. **Writes the paper.** A PDF with methods, figures, limitations and IBM job IDs. Every number is computed from the run log, never typed by the AI.
 8. **Replays the night.** A live mission-control site shows the agent's reasoning, the qubits it chose on the chip, and every result.
 
 ## Results (real IBM hardware, `ibm_fez`)
-| GHZ size · layout | Twin prediction (frozen first) | Hardware fidelity [95% CI] | Entangled? |
+| GHZ size · circuit | Twin prediction (frozen first) | Hardware fidelity [95% CI] | Entangled? |
 |---|---|---|---|
-| 16 · error-aware tree | 0.906 | **0.841** [0.820, 0.862] | ✅ certified |
-| **24 · error-aware tree** | 0.866 | **0.723** [0.700, 0.746] | ✅ certified |
-| **24 · shallow tree** (round 2) | 0.845 | **0.842** [0.720, 0.972] | ✅ certified: confirmed record |
-| 24 · textbook chain | 0.705 | 0.107 [0.031, 0.163] | ❌ |
+| 16 · error-weighted tree | 0.906 | **0.841** [0.820, 0.862] | ✅ certified |
+| **24 · error-weighted tree** | 0.866 | **0.723** [0.700, 0.746] | ✅ **certified (record)** |
+| 24 · breadth-first tree (round 2) | 0.845 | 0.842 [0.720, 0.972] | ✅ certified (noisier) |
+| 24 · linear CNOT chain | 0.705 | 0.107 [0.031, 0.163] | ❌ |
 | 28 / 32 / 36 · tree | 0.815 / 0.796 / 0.776 | 0.580 / 0.537 / 0.489 | ❌ |
-| 40 · tree (round 1) | 0.727 | 0.654 [0.520, 0.788] | ✅ certified, then **withdrawn** |
-| 40 · same qubits, 2× shots (confirmation) | 0.726 | 0.414 [0.326, 0.486] | ❌ confirmation failed |
+| 40 · tree (round 1) | 0.727 | 0.654 [0.520, 0.788] | ✅ by 0.02, then **failed its re-run** |
+| 40 · same qubits, 2× shots (round 2 re-run) | 0.726 | 0.414 [0.326, 0.486] | ❌ |
 | 48 / 56 / 60 · tree | 0.648 / 0.604 / 0.642 | 0.455 / 0.319 / 0.244 | ❌ |
 
-- **Confirmed record: 24 qubits of genuine multipartite entanglement**, certified twice with two different layouts.
-- **The AI caught its own false positive.** Round 1 certified 40 qubits by a hair (lower bound 0.520, while 32 failed). Before claiming it, the agent re-ran the identical experiment on the same qubits with twice the shots: F = 0.414, not certified. So it withdrew the 40-qubit claim, in its log, on the site and in its paper.
-- **The AI's layout is the difference between entangled and not.** At 24 qubits, the error-aware tree reached F = 0.723, while the textbook linear CNOT chain on the same chip collapsed to 0.107.
-- **12 hardware experiments in two rounds,** using 322 s of the free 600 s.
+- **Record: 24 qubits of genuine multipartite entanglement**, F = 0.723 [0.700, 0.746]. A second 24-qubit run with a different tree also certified (on overlapping qubits, 20 of 24 shared).
+- **The confirmation step caught a false positive.** Round 1 certified 40 qubits by a hair (lower bound 0.520, while 32 failed). The validator had already forced a re-run of the best result into round 2, before any results existed. Same qubits, twice the shots: F = 0.414, not certified. So 40 qubits is not claimed, in the paper, on the site or in the log.
+- **Circuit shape is the difference between entangled and not.** At 24 qubits, a shallow tree (two-qubit depth 8) reached F = 0.723, while a linear CNOT chain (depth 23) on the same chip collapsed to 0.107. A tree that ignores error rates did just as well (0.842), so the win comes from depth, not from error-weighting the layout.
+- **12 hardware experiments in two rounds,** using 322 s of the free 600 s (under a self-imposed 480 s cap).
 
 ## How I built it
 - **Qiskit:** GHZ circuits built as shallow trees over the coupling map, transpiled with a fixed `initial_layout` so the agent's chosen qubits are exactly what runs. Parity-oscillation circuits are generated by parameter binding.
 - **Qiskit Runtime:** `QiskitRuntimeService` + `SamplerV2` in job mode, dynamical decoupling (XpXm), measurement twirling, and `job.usage()` for exact QPU budget accounting.
-- **Digital twin:** a custom Pauli-frame noise simulator in numpy that handles 80 qubits in about 7 seconds (Qiskit Aer MPS took about 7 minutes at 30 qubits). It models gate errors, idle decoherence and readout error from the live calibration.
+- **Digital twin:** a custom Pauli-frame noise simulator in numpy that handles 80 qubits in about 7 seconds (Qiskit Aer's MPS method took about 7 minutes at 30 qubits). It models gate errors, idle decoherence and readout error from the live calibration.
 - **Agent:** Gemini 2.5 Flash, with hard budget caps on model calls and QPU seconds that are charged *before* spending, and validators that keep its plans safe and informative.
 - **Paper and site:** matplotlib figures and HTML rendered to PDF; a vanilla JS/SVG mission-control replay deployed on Vercel.
 
 ## Challenges I ran into
-- **The queue.** `ibm_fez` had about 20,000 pending jobs, so an agent that waits for each result would finish one or two experiments in a night. I rebuilt the hardware path to plan a whole batch, submit everything at once and collect results asynchronously.
-- **Simulation speed.** Aer took minutes per experiment, too slow for an agent loop, so I wrote a simulator about 100× faster.
+- **The queue.** `ibm_fez` had about 20,000 pending jobs, and round 1 waited about 6 hours. An agent that waits for each result would finish one or two experiments in a night, so I rebuilt the hardware path to plan a whole round, submit everything at once and collect results asynchronously.
+- **Simulation speed.** Aer took minutes per experiment, too slow for an agent loop, so I wrote a simulator that takes seconds.
 - **Honest statistics.** A naive fidelity estimate let *non*-entangled states appear just above 0.5 from shot noise. I added bias correction and a test that separable states are never certified.
 - **LLM gotchas.** Gemini's thinking tokens silently truncated its JSON plan, and its first plan was over-optimistic (it started at 40 qubits). Guardrails now force a safe anchor experiment and a meaningful comparison.
 
 ## Accomplishments that I'm proud of
-- An AI scientist that withdrew its own 40-qubit headline when the confirmation failed, instead of publishing a lucky result.
-- 24 qubits of genuine multipartite entanglement on real IBM hardware, certified twice with different layouts.
-- Showing that an error-aware layout keeps a 24-qubit state entangled (F = 0.723) where the textbook circuit loses it entirely (F = 0.107).
-- An AI that pre-registers its predictions, so its mistakes are measurable instead of hidden.
-- A full pipeline from live calibration to published paper and replay site, with 64 automated tests.
+- 24 qubits of genuine multipartite entanglement on real IBM hardware, with a tight confidence interval.
+- A pipeline that refused to publish a lucky 40-qubit result: the pre-registered re-run failed, so it isn't claimed.
+- A full pipeline from live calibration to published paper and replay site, with 65 automated tests.
 
 ## What I learned
-- The digital twin predicted all 12 experiments would certify; only 4 did. Its overestimate grew with size, from 0.065 at 16 qubits to 0.40 at 60. Error that grows with size points to correlated noise (crosstalk, leakage) that per-gate calibration numbers don't capture.
+- The digital twin predicted all 12 experiments would certify; 4 did. It overestimated fidelity in all 12 (mean +0.24, range +0.003 to +0.597), generally more at larger sizes, which points to correlated noise (crosstalk, leakage, drift) that per-gate calibration numbers don't capture.
 - Results near the threshold need confirmation. 40 qubits certified while 32 didn't, and the re-run did not reproduce it (a lucky draw, possibly plus calibration drift). Without the confirmation step, I would have claimed a result that did not hold up.
-- Pre-registration matters: because the predictions were frozen before the data, the twin's miss is a real measurement, not something I could quietly tune away.
+- Readout mitigation is a double-edged sword: at large sizes it amplifies noise (some mitigated parities exceed the physical ±1), so the tightest interval, not the highest number, is the evidence to trust.
 
 ## What's next for Q-Scientist
 - Error detection and post-selection to push the certified size further.
+- An unmitigated-fidelity check and more re-runs at 28 to 36 qubits, where results sit right at the threshold.
 - Let the agent re-plan around the qubits its twin mispredicts, since those show where the noise model is wrong.
-- More confirmation runs at 28 to 36 qubits, where results sit right at the threshold.
 
 ## How AI was used
 Built with AI coding assistance (Claude), which the organizers allow. At runtime, Gemini is the experiment-planning agent. Every number in the paper is computed from the run log, never typed by a model.

@@ -94,11 +94,12 @@ class RunFacts:
                 if e.ok and e.certified and self.refuted(e)]
 
     def record(self, mode: str) -> Experiment | None:
-        """Largest certified N in a mode whose confirmation (if one ran) did not fail; ties -> higher CI lower bound."""
+        """Largest certified N in a mode whose confirmation (if one ran) did not fail; ties -> narrower CI."""
         cands = [e for e in self.by_mode(mode) if e.ok and e.certified and not self.refuted(e)]
         if not cands:
             return None
-        return max(cands, key=lambda e: (e.n, e.ci_low or 0))
+        # equal N: prefer the more precise estimate (narrower CI), not the luckier lower bound
+        return max(cands, key=lambda e: (e.n, -((e.ci_high or 1) - (e.ci_low or 0))))
 
     def record_overall(self) -> Experiment | None:
         return self.record("qpu") or self.record("sim")

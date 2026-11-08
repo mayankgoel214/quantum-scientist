@@ -51,7 +51,7 @@ def test_failed_confirmation_withdraws_record():
     assert f.refuted(exps[1]) and f.record("qpu").exp_id == "e1"
     assert [(a.exp_id, b.exp_id) for a, b in f.refutations()] == [("e2", "e3")]
     exps[2].raw["ci_low"] = 0.51  # a confirmation that also certifies keeps the record
-    assert not f.refuted(exps[1]) and f.record("qpu").n == 40
+    assert not f.refuted(exps[1]) and f.record("qpu").n == 40  # larger N wins regardless of CI width
     twin = Experiment("e3-twin", "sim", 40, {"spec": {"n_qubits": 40, "confirmation_of": "e2"}, "fidelity": 0.7,
                                              "ci_low": 0.68, "ci_high": 0.72})
     exps[2].raw["ci_low"] = 0.33

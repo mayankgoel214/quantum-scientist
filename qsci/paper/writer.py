@@ -202,6 +202,13 @@ class Paper:
                     f"{self.rec_sim.n} qubits in noisy simulation")
         return "An autonomous AI scientist searches for large certified GHZ states: a negative result"
 
+    def same_n_certified(self, r):
+        """Certified hardware experiments at the record size, and how many physical qubits they all share."""
+        same = [e for e in self.f.by_mode("qpu") if e.ok and e.certified and e.n == r.n and not self.f.refuted(e)]
+        sets = [set(e.raw.get("physical_qubits") or []) for e in same]
+        shared = len(set.intersection(*sets)) if len(sets) > 1 and all(sets) else None
+        return same, shared
+
     def planner_phrase(self) -> str:
         planner = str(self.f.run_started.get("planner") or "gemini")
         auto = sum(1 for th in self.f.thoughts if str((th.get("data") or {}).get("text", "")).startswith("[autopilot]"))
@@ -230,8 +237,9 @@ class Paper:
                    f"(the public queue made adaptive scheduling impossible)"
                    + (f" and, after reading every result, a second round of {len(r2)} that included a pre-registered confirmation of its own record"
                       if r2 else "")
-                   + f"{back}; before submission every experiment was predicted by a "
-                   f"digital twin, a noise simulation driven by the live calibration{budget}. ")
+                   + f"{back}. Before submission every experiment was predicted by a "
+                   f"digital twin, a noise simulation driven by the live calibration. "
+                   + (f"The run used {f.qpu_seconds_used:.0f} s of a self-imposed {f.max_qpu_seconds:.0f} s QPU budget. " if f.max_qpu_seconds else ""))
         else:
             how = (f"{self.planner_phrase()} planned, executed and interpreted {self.n_exp} experiments "
                    f"({self.n_sim} in a noisy simulator, {self.n_qpu} on hardware){dur}{budget}. ")
@@ -254,21 +262,24 @@ class Paper:
         else:
             parts.append("No experiment met the certification criterion.")
         if r:
-            same = [e for e in f.by_mode("qpu") if e.ok and e.certified and e.n == r.n]
+            same, shared = self.same_n_certified(r)
             if len(same) > 1:
-                parts.append(f"N = {r.n} certified in {len(same)} independent hardware experiments with different layouts.")
+                parts.append(f"N = {r.n} certified in {len(same)} separate hardware experiments with different tree layouts"
+                             + (f", on overlapping qubits ({shared} of {r.n} shared)." if shared else "."))
         for orig, conf in f.refutations():
             parts.append(f"An apparent N = {orig.n} record (F = {orig.fidelity:.3f}, CI {orig.ci_low:.3f}–{orig.ci_high:.3f}) failed its "
                          f"pre-registered confirmation on the same qubits (F = {conf.fidelity:.3f}, CI {conf.ci_low:.3f}–{conf.ci_high:.3f}, "
-                         f"{conf.spec.get('shots')} shots), so the agent withdrew it.")
+                         f"{conf.spec.get('shots')} shots), so it is withdrawn and not claimed.")
         for lp in self.f.layout_pairs():
             t, c = lp["tree"], lp["chain"]
-            parts.append(f"At N = {lp['n']} the error-aware tree layout reached F = {t.fidelity:.3f} versus {c.fidelity:.3f} for the "
-                         f"textbook linear chain on the same device{' (only the tree certified)' if t.certified and not c.certified else ''}.")
-        if self.gap and f.batch:
-            diffs = [sv - hv for _, sv, hv in self.gap]
-            parts.append(f"The digital twin overestimated hardware fidelity by {min(diffs):.2f} to {max(diffs):.2f} across "
-                         f"{len(self.gap)} sizes, quantifying the noise it does not model.")
+            parts.append(f"At N = {lp['n']} a shallow tree circuit (two-qubit depth {t.raw.get('circuit_depth') or '–'}) reached F = {t.fidelity:.3f} "
+                         f"versus {c.fidelity:.3f} for a linear CNOT chain (depth {c.raw.get('circuit_depth') or '–'}) on the same device"
+                         f"{' (only the tree certified)' if t.certified and not c.certified else ''}.")
+        if f.batch and f.twin_pairs():
+            errs = [tw.fidelity - hw.fidelity for hw, tw in f.twin_pairs()]
+            parts.append(f"The digital twin, whose predictions were frozen before submission, overestimated hardware fidelity in "
+                         f"{sum(1 for x in errs if x > 0)} of {len(errs)} experiments (mean {sum(errs) / len(errs):+.3f}, range "
+                         f"{min(errs):+.3f} to {max(errs):+.3f}), quantifying the noise it does not model.")
         elif self.gap:
             diffs = [sv - hv for _, sv, hv in self.gap]
             parts.append(
@@ -301,7 +312,7 @@ the lower end of a confidence interval on <i>F</i> must exceed 1/2.</p>
 problem over layouts, circuit shapes and mitigation settings under a tight hardware budget. In this work the
 search was run end-to-end by an autonomous agent built on a large language model (Gemini), which proposed every
 experiment{', predicted each hardware result with a digital twin before it ran,' if self.f.batch else ', decided when a result in simulation justified spending hardware time,'} and wrote this report.
-The human operator set the goal and budget, and did not intervene in experiment selection.</p>
+The human operator set the goal and budget and ran the submit and collect commands; which experiments to run was the agent's choice.</p>
 """
 
     # -------------- 2 methods (HTML)
@@ -397,17 +408,24 @@ Circuits were built and transpiled with Qiskit {cite('qiskit24')}, keeping the p
         if f.batch:
             plan_q = [ev for ev in f.thoughts if str(ev["data"]["text"]).startswith("[batch plan]")]
             rat = esc(_sentences(plan_q[0]["data"]["text"].replace("[batch plan]", "").strip(), 900)) if plan_q else ""
-            specs = "; ".join(f"{esc(e['exp_id'])}: N = {e['spec']['n_qubits']} {esc(e['spec']['layout_strategy'])}" for e in f.pending)
+            def _sp(rows):
+                return "; ".join(f"{esc(e['exp_id'])}: N = {e['spec']['n_qubits']} {esc(e['spec']['layout_strategy'])}"
+                                 + (f" (re-run of {esc(e['spec']['confirmation_of'])})" if e['spec'].get('confirmation_of') else "")
+                                 for e in rows)
+            r1 = [e for e in f.pending if (e.get("round") or 1) == 1]
+            r2 = [e for e in f.pending if (e.get("round") or 1) == 2]
+            specs = (f"round 1, {_sp(r1)}" + (f". Round 2, designed after reading every round-1 result, with the validator "
+                     f"requiring a pre-registered re-run of the largest certified result: {_sp(r2)}" if r2 else ""))
             return f"""
 <p>In its interactive mode the agent runs a closed loop over simulator and hardware experiments. On the public
 queue of {esc(f.backend)}, however, a single job can wait hours, so a loop that waits for each result could finish only
-one or two hardware experiments in a night. For this run the agent therefore designed the entire hardware batch in one
+one or two hardware experiments in a night. For this run the agent therefore designed each round of hardware experiments in a single
 planning step. Its context was the live calibration summary, its own earlier simulator results and a cost table for
 each experiment size. Every proposed experiment was then checked by a validator, which enforces a safe small-<i>N</i>
 anchor, a matched tree-versus-chain comparison and the QPU budget. Each experiment was also run through a digital
 twin (the noise simulator of §2.1 driven by the <em>live</em> calibration) to record a prediction <em>before</em> the
 hardware result existed. All jobs were then submitted at once and collected as they completed.</p>
-<p>The batch was: {specs}. {llm_txt}{qpu_txt}. The agent's stated rationale, verbatim:</p>
+<p>The experiments were: {specs}. Every model call was charged against a hard cap before it was made; the run used {f.qpu_seconds_used:.0f} of its {f.max_qpu_seconds or 0:.0f} self-imposed QPU seconds (the open plan allows 600). The agent's round-1 rationale, verbatim:</p>
 <blockquote><p>“{rat}”</p><footer>— agent, batch plan</footer></blockquote>
 """
         return f"""
@@ -448,6 +466,20 @@ verbatim, follows.</p>
         else:
             out.append("<p>No hardware experiment met the certification criterion "
                        f"({self.n_qpu} hardware experiment{'s' if self.n_qpu != 1 else ''} attempted).</p>")
+        if r and r.mode == "qpu":
+            def maxp(e):
+                return max((abs(p.get("parity", 0)) for p in (e.raw.get("parity_curve") or [])), default=0)
+            same, _ = self.same_n_certified(r)
+            noisy = [e for e in same if e is not r and maxp(e) > 1]
+            allmax = max((maxp(e) for e in f.by_mode("qpu") if e.ok), default=0)
+            if noisy or allmax > 1:
+                out.append(
+                    "<p><b>Readout mitigation and noise.</b> Inverting the readout model amplifies shot noise as <i>N</i> grows: "
+                    f"across the run, individual mitigated parities reach |⟨P⟩| = {allmax:.2f}, outside the physical range ±1."
+                    + "".join(f" The second N = {r.n} certification, {e.exp_id} (<i>F</i> = {e.fidelity:.3f} [{e.ci_low:.3f}, {e.ci_high:.3f}]), "
+                              f"has mitigated parities up to {maxp(e):.2f} and an interval {(e.ci_high - e.ci_low) / (r.ci_high - r.ci_low):.0f}× wider than "
+                              f"{r.exp_id}'s, so {r.exp_id} is quoted as the record." for e in noisy)
+                    + " The certified values are properties of the mitigated estimator; an unmitigated check was not performed.</p>")
         for orig, conf in f.refutations():
             out.append(
                 f"<p><b>A withdrawn record.</b> In the first round, {orig.exp_id} certified an N = {orig.n} state with "
@@ -455,7 +487,7 @@ verbatim, follows.</p>
                 f"threshold, while the smaller N = {', '.join(str(e.n) for e in f.by_mode('qpu') if e.ok and not e.certified and e.n < orig.n and e.spec.get('layout_strategy') == orig.spec.get('layout_strategy') and (e.raw.get('spec') or {}).get('confirmation_of') is None) or '–'} "
                 f"tree states did not certify. Its validator-enforced confirmation, {conf.exp_id}, re-ran the identical specification on the same physical qubits "
                 f"with {conf.spec.get('shots')} shots and measured <i>F</i> = {conf.fidelity:.3f} [{conf.ci_low:.3f}, {conf.ci_high:.3f}]: not certified. "
-                f"The agent therefore does not claim N = {orig.n}; the first result is best read as an upward fluctuation selected from several noisy attempts, "
+                f"N = {orig.n} is therefore not claimed; the first result is best read as an upward fluctuation selected from several noisy attempts, "
                 f"possibly compounded by calibration drift between the two runs. This is the selection effect discussed in Section 5, observed directly.</p>")
         if s and not f.batch:
             out.append(f"<p>In the noisy simulator the largest certified state has <b>N = {s.n}</b> ({s.exp_id}, "
@@ -491,13 +523,17 @@ verbatim, follows.</p>
                        "The chain did better, contrary to the prediction." if c.fidelity > t.fidelity else
                        "Neither certified.")
             out.append(
-                f"<p><b>Error-aware layout versus textbook chain.</b> At <i>N</i> = {lp['n']} the error-weighted tree ({t.exp_id}, "
+                f"<p><b>Tree circuit versus linear chain.</b> At <i>N</i> = {lp['n']} the error-weighted tree ({t.exp_id}, "
                 f"two-qubit depth {t.raw.get('circuit_depth') or '–'}) reached <i>F</i> = {t.fidelity:.3f} [{t.ci_low:.3f}, {t.ci_high:.3f}], "
                 f"against {c.fidelity:.3f} [{c.ci_low:.3f}, {c.ci_high:.3f}] for the linear CNOT chain ({c.exp_id}, depth "
                 f"{c.raw.get('circuit_depth') or '–'}), a difference of {t.fidelity - c.fidelity:+.3f}. {verdict}"
                 + (f" The twin had predicted {pt.fidelity:.3f} and {pc.fidelity:.3f} respectively, so the sign of the "
                    f"difference was {'correctly' if (pt.fidelity - pc.fidelity) * (t.fidelity - c.fidelity) > 0 else '<b>not</b>'} "
                    "anticipated before the hardware ran." if pt and pc else "")
+                + "".join(f" A breadth-first tree that ignores error rates ({b.exp_id}) reached <i>F</i> = {b.fidelity:.3f} at the same size, "
+                          "so the advantage over the chain comes from circuit depth rather than from error-weighting the layout."
+                          for b in f.by_mode("qpu") if b.ok and b.n == lp["n"] and b.spec.get("layout_strategy") == "bfs_tree"
+                          and b.fidelity >= t.fidelity - 0.02)
                 + " (Fig. 5)</p>")
         tp = f.twin_pairs()
         if tp:
@@ -559,7 +595,7 @@ bootstrap confidence interval; ✓ = certified (<i>F</i><sub>low</sub> &gt; 1/2)
         paras = []
         if r:
             margin = r.ci_low - 0.5
-            attempts = [e for e in f.by_mode(r.mode) if e.n >= r.n - 4]
+            attempts = [e for e in f.by_mode(r.mode) if abs(e.n - r.n) <= 4]
             n_attempts = len([e for e in attempts if not e.error])
             fragile = "narrow" if margin < 0.03 else "moderate" if margin < 0.08 else "comfortable"
             paras.append(
@@ -572,8 +608,9 @@ bootstrap confidence interval; ✓ = certified (<i>F</i><sub>low</sub> &gt; 1/2)
                 + (f"The danger is not hypothetical: in this run an apparent N = {f.refutations()[0][0].n} record failed its pre-registered "
                    f"confirmation and was withdrawn (Section 4). "
                    if f.refutations() else "")
-                + (f"The N = {r.n} record itself was certified in {len([e for e in f.by_mode(r.mode) if e.ok and e.certified and e.n == r.n])} "
-                   f"independent experiments, which mitigates but does not remove this concern."
+                + (f"The N = {r.n} record itself was certified in {len(self.same_n_certified(r)[0])} separate experiments with different tree "
+                   f"layouts{f' sharing {self.same_n_certified(r)[1]} of {r.n} qubits' if self.same_n_certified(r)[1] else ''}, which mitigates but "
+                   f"does not remove this concern; neither was itself re-run."
                    if len([e for e in f.by_mode(r.mode) if e.ok and e.certified and e.n == r.n]) > 1 else
                    f"A pre-registered confirmation run of the identical specification, ideally with more shots, is the appropriate next "
                    f"step before treating N = {r.n} as established.")
@@ -634,7 +671,7 @@ bootstrap confidence interval; ✓ = certified (<i>F</i><sub>low</sub> &gt; 1/2)
 <tr><td>Run mode / backend</td><td>{esc(f.run_mode)} / {esc(f.backend)}</td></tr>
 <tr><td>Run start / end</td><td>{fmt_dt(f.started_at)} / {fmt_dt(f.finished_at)}</td></tr>
 <tr><td>Calibration</td><td>{esc({'live': 'live backend query', 'fake': 'static Qiskit snapshot (fake backend)'}.get(self.cal['source'], self.cal['source'] or 'unknown'))}, {esc(self.cal['timestamp'] or 'unknown')}</td></tr>
-<tr><td>Budget used</td><td>{f.qpu_seconds_used:.1f} / {f.max_qpu_seconds or 0:.0f} QPU s; {f.llm_calls if f.llm_calls is not None else '–'} / {f.max_llm_calls or '–'} LLM calls</td></tr>
+<tr><td>Budget used</td><td>{f.qpu_seconds_used:.1f} / {f.max_qpu_seconds or 0:.0f} QPU s (self-imposed cap; open plan 600 s); LLM calls capped and metered</td></tr>
 <tr><td>Agent model</td><td>{esc(model)}</td></tr>
 <tr><td>Software</td><td>{esc(', '.join(vers))}</td></tr>
 </table>
@@ -670,7 +707,7 @@ bootstrap confidence interval; ✓ = certified (<i>F</i><sub>low</sub> &gt; 1/2)
                    f"{'hardware' if pe and pe.mode == 'qpu' else 'simulator'}). (i) Measured parity at each phase "
                    "φ<sub><i>j</i></sub> with the fitted <i>C</i> cos(<i>N</i>φ + δ). (ii) The same points folded onto one period.") if pe else ""
         fig3 = fig("chip", "col", 3, f"Calibration snapshot of {esc(self.f.backend)}: couplers coloured by CZ error, "
-                   f"with the GHZ tree of {ce.exp_id if ce else ''} highlighted (root ★; ✕ marks qubits excluded by the agent).") if ce else ""
+                   f"with the GHZ tree of {ce.exp_id if ce else ''} highlighted (root ★" + ("; ✕ marks qubits excluded by the agent" if any(e.spec.get("exclude_qubits") for e in self.f.experiments) else "") + ").") if ce else ""
         fig4 = fig("timeline", "wide", 4, "Timeline of the run. Top: qubit number of each experiment against wall-clock time, "
                    "coloured by outcome; the line tracks the certified hardware record. Bottom: cumulative fraction of the QPU-time "
                    "and LLM-call budgets consumed.")
