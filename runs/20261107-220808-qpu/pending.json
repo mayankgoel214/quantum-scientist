@@ -1797,7 +1797,7 @@
    "confirmation_of": "e005"
   },
   "job_id": "dbo4738ou4as73b5fts0",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794130829.248406,
   "round": 2,
   "plan": {
@@ -2014,7 +2014,7 @@
    "ci_high": 0.74469,
    "certified": true
   },
-  "last_status": "RUNNING"
+  "last_status": "DONE"
  },
  {
   "exp_id": "e010",
@@ -2033,7 +2033,7 @@
    "sim_engine": "pauli_frame"
   },
   "job_id": "dbo473tt7fqc73akhc70",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794130831.350196,
   "round": 2,
   "plan": {
@@ -2230,7 +2230,7 @@
    "ci_high": 0.80317,
    "certified": true
   },
-  "last_status": "RUNNING"
+  "last_status": "DONE"
  },
  {
   "exp_id": "e011",
