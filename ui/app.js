@@ -191,7 +191,8 @@ function recomputeBest(m) {
     const k = modeOf(e) === 'qpu' ? 'qpu' : 'sim';
     const n = d.n_qubits ?? (d.physical_qubits || []).length;
     const b = best[k];
-    if (!b || n > b.n || (n === b.n && d.fidelity > b.fidelity)) best[k] = { n, fidelity: d.fidelity, ci_low: d.ci_low, ci_high: d.ci_high, id: d.exp_id };
+    // equal N: prefer the more precise estimate (narrower CI), same rule as the paper
+    if (!b || n > b.n || (n === b.n && (d.ci_high - d.ci_low) < (b.ci_high - b.ci_low))) best[k] = { n, fidelity: d.fidelity, ci_low: d.ci_low, ci_high: d.ci_high, id: d.exp_id };
   }
   m.best = best;
 }
