@@ -1,0 +1,596 @@
+{
+ "exp_id": "e005",
+ "spec": {
+  "n_qubits": 40,
+  "layout_strategy": "weighted_tree",
+  "root": null,
+  "exclude_qubits": [],
+  "circuit_variant": "tree",
+  "dynamical_decoupling": true,
+  "measure_twirling": true,
+  "readout_mitigation": true,
+  "shots": 1000,
+  "mode": "qpu",
+  "hypothesis": "This size is pushing the limits, but weighted_tree might still certify.",
+  "sim_engine": "pauli_frame"
+ },
+ "physical_qubits": [
+  92,
+  91,
+  93,
+  90,
+  79,
+  98,
+  89,
+  94,
+  73,
+  111,
+  88,
+  95,
+  74,
+  110,
+  78,
+  87,
+  99,
+  75,
+  112,
+  109,
+  69,
+  97,
+  115,
+  59,
+  118,
+  70,
+  86,
+  107,
+  114,
+  55,
+  68,
+  71,
+  85,
+  106,
+  54,
+  67,
+  58,
+  84,
+  105,
+  104
+ ],
+ "tree_edges": [
+  [
+   92,
+   91
+  ],
+  [
+   92,
+   93
+  ],
+  [
+   91,
+   90
+  ],
+  [
+   93,
+   79
+  ],
+  [
+   91,
+   98
+  ],
+  [
+   90,
+   89
+  ],
+  [
+   93,
+   94
+  ],
+  [
+   79,
+   73
+  ],
+  [
+   98,
+   111
+  ],
+  [
+   89,
+   88
+  ],
+  [
+   94,
+   95
+  ],
+  [
+   73,
+   74
+  ],
+  [
+   111,
+   110
+  ],
+  [
+   89,
+   78
+  ],
+  [
+   88,
+   87
+  ],
+  [
+   95,
+   99
+  ],
+  [
+   74,
+   75
+  ],
+  [
+   111,
+   112
+  ],
+  [
+   110,
+   109
+  ],
+  [
+   78,
+   69
+  ],
+  [
+   87,
+   97
+  ],
+  [
+   99,
+   115
+  ],
+  [
+   75,
+   59
+  ],
+  [
+   109,
+   118
+  ],
+  [
+   69,
+   70
+  ],
+  [
+   87,
+   86
+  ],
+  [
+   97,
+   107
+  ],
+  [
+   115,
+   114
+  ],
+  [
+   59,
+   55
+  ],
+  [
+   69,
+   68
+  ],
+  [
+   70,
+   71
+  ],
+  [
+   86,
+   85
+  ],
+  [
+   107,
+   106
+  ],
+  [
+   55,
+   54
+  ],
+  [
+   68,
+   67
+  ],
+  [
+   71,
+   58
+  ],
+  [
+   85,
+   84
+  ],
+  [
+   106,
+   105
+  ],
+  [
+   105,
+   104
+  ]
+ ],
+ "root": 92,
+ "circuit_depth": 10,
+ "two_qubit_gate_count": 39,
+ "fidelity": 0.65404,
+ "ci_low": 0.52018,
+ "ci_high": 0.78776,
+ "populations": 0.72321,
+ "coherence": 0.58487,
+ "parity_curve": [
+  {
+   "phi": 0.0,
+   "parity": 1.5521
+  },
+  {
+   "phi": 0.076624,
+   "parity": -0.71424
+  },
+  {
+   "phi": 0.153248,
+   "parity": 0.1266
+  },
+  {
+   "phi": 0.229873,
+   "parity": -0.33404
+  },
+  {
+   "phi": 0.306497,
+   "parity": -0.06745
+  },
+  {
+   "phi": 0.383121,
+   "parity": -0.12114
+  },
+  {
+   "phi": 0.459745,
+   "parity": -0.40375
+  },
+  {
+   "phi": 0.536369,
+   "parity": -0.0966
+  },
+  {
+   "phi": 0.612994,
+   "parity": 0.42524
+  },
+  {
+   "phi": 0.689618,
+   "parity": 1.31316
+  },
+  {
+   "phi": 0.766242,
+   "parity": -0.05656
+  },
+  {
+   "phi": 0.842866,
+   "parity": -0.89543
+  },
+  {
+   "phi": 0.919491,
+   "parity": 0.48033
+  },
+  {
+   "phi": 0.996115,
+   "parity": -0.06716
+  },
+  {
+   "phi": 1.072739,
+   "parity": -0.44202
+  },
+  {
+   "phi": 1.149363,
+   "parity": -0.55233
+  },
+  {
+   "phi": 1.225987,
+   "parity": -0.82296
+  },
+  {
+   "phi": 1.302612,
+   "parity": -0.57443
+  },
+  {
+   "phi": 1.379236,
+   "parity": -0.67496
+  },
+  {
+   "phi": 1.45586,
+   "parity": -0.2407
+  },
+  {
+   "phi": 1.532484,
+   "parity": 0.04922
+  },
+  {
+   "phi": 1.609108,
+   "parity": 0.25334
+  },
+  {
+   "phi": 1.685733,
+   "parity": -0.8922
+  },
+  {
+   "phi": 1.762357,
+   "parity": 0.41071
+  },
+  {
+   "phi": 1.838981,
+   "parity": -0.316
+  },
+  {
+   "phi": 1.915605,
+   "parity": 0.77091
+  },
+  {
+   "phi": 1.992229,
+   "parity": -0.17938
+  },
+  {
+   "phi": 2.068854,
+   "parity": 1.18339
+  },
+  {
+   "phi": 2.145478,
+   "parity": 0.25042
+  },
+  {
+   "phi": 2.222102,
+   "parity": 1.24966
+  },
+  {
+   "phi": 2.298726,
+   "parity": -0.00623
+  },
+  {
+   "phi": 2.375351,
+   "parity": 0.19988
+  },
+  {
+   "phi": 2.451975,
+   "parity": -0.56865
+  },
+  {
+   "phi": 2.528599,
+   "parity": 1.01517
+  },
+  {
+   "phi": 2.605223,
+   "parity": -0.23542
+  },
+  {
+   "phi": 2.681847,
+   "parity": 1.98002
+  },
+  {
+   "phi": 2.758472,
+   "parity": 0.20829
+  },
+  {
+   "phi": 2.835096,
+   "parity": 1.14693
+  },
+  {
+   "phi": 2.91172,
+   "parity": 0.62922
+  },
+  {
+   "phi": 2.988344,
+   "parity": 0.50084
+  },
+  {
+   "phi": 3.064968,
+   "parity": -1.7182
+  },
+  {
+   "phi": 3.141593,
+   "parity": 1.54987
+  },
+  {
+   "phi": 3.218217,
+   "parity": -0.11747
+  },
+  {
+   "phi": 3.294841,
+   "parity": 1.26482
+  },
+  {
+   "phi": 3.371465,
+   "parity": -0.33663
+  },
+  {
+   "phi": 3.448089,
+   "parity": 0.37001
+  },
+  {
+   "phi": 3.524714,
+   "parity": -0.65904
+  },
+  {
+   "phi": 3.601338,
+   "parity": -0.3138
+  },
+  {
+   "phi": 3.677962,
+   "parity": -0.64383
+  },
+  {
+   "phi": 3.754586,
+   "parity": 0.45145
+  },
+  {
+   "phi": 3.831211,
+   "parity": 0.08445
+  },
+  {
+   "phi": 3.907835,
+   "parity": -1.39626
+  },
+  {
+   "phi": 3.984459,
+   "parity": -0.63387
+  },
+  {
+   "phi": 4.061083,
+   "parity": -0.47866
+  },
+  {
+   "phi": 4.137707,
+   "parity": 0.44303
+  },
+  {
+   "phi": 4.214332,
+   "parity": 0.25497
+  },
+  {
+   "phi": 4.290956,
+   "parity": 0.28373
+  },
+  {
+   "phi": 4.36758,
+   "parity": 0.16864
+  },
+  {
+   "phi": 4.444204,
+   "parity": -0.42974
+  },
+  {
+   "phi": 4.520828,
+   "parity": 1.16297
+  },
+  {
+   "phi": 4.597453,
+   "parity": -0.22484
+  },
+  {
+   "phi": 4.674077,
+   "parity": 0.2096
+  },
+  {
+   "phi": 4.750701,
+   "parity": 0.59615
+  },
+  {
+   "phi": 4.827325,
+   "parity": 0.27545
+  },
+  {
+   "phi": 4.90395,
+   "parity": -0.39137
+  },
+  {
+   "phi": 4.980574,
+   "parity": -0.39558
+  },
+  {
+   "phi": 5.057198,
+   "parity": -0.38621
+  },
+  {
+   "phi": 5.133822,
+   "parity": -0.88818
+  },
+  {
+   "phi": 5.210446,
+   "parity": 0.72473
+  },
+  {
+   "phi": 5.287071,
+   "parity": -0.36956
+  },
+  {
+   "phi": 5.363695,
+   "parity": 1.69159
+  },
+  {
+   "phi": 5.440319,
+   "parity": 0.14974
+  },
+  {
+   "phi": 5.516943,
+   "parity": 0.48721
+  },
+  {
+   "phi": 5.593567,
+   "parity": -0.55304
+  },
+  {
+   "phi": 5.670192,
+   "parity": 1.65887
+  },
+  {
+   "phi": 5.746816,
+   "parity": 0.53277
+  },
+  {
+   "phi": 5.82344,
+   "parity": 0.26569
+  },
+  {
+   "phi": 5.900064,
+   "parity": -1.03229
+  },
+  {
+   "phi": 5.976688,
+   "parity": 0.6037
+  },
+  {
+   "phi": 6.053313,
+   "parity": -1.17302
+  },
+  {
+   "phi": 6.129937,
+   "parity": 0.42751
+  },
+  {
+   "phi": 6.206561,
+   "parity": -1.3233
+  }
+ ],
+ "certified": true,
+ "qpu_seconds": 28.0,
+ "wall_seconds": 22983.25,
+ "backend": "ibm_fez",
+ "job_ids": [
+  "dbnuf8dt7fqc73ak8ing"
+ ],
+ "error": null,
+ "predicted": {
+  "fidelity": 0.72742,
+  "ci_low": 0.69793,
+  "ci_high": 0.75303,
+  "certified": true
+ },
+ "transpiled_depth": 44,
+ "plan_depth": 10,
+ "sim_method": null,
+ "p_all0": 0.4691,
+ "p_all1": 0.25411,
+ "readout_rates": {
+  "mean_e0": 0.02378,
+  "mean_e1": 0.02675
+ },
+ "notes": {
+  "sampler_options": {
+   "default_shots": 1000,
+   "dynamical_decoupling": {
+    "enable": true,
+    "sequence_type": "XpXm"
+   },
+   "twirling": {
+    "enable_gates": false,
+    "enable_measure": true
+   }
+  },
+  "num_pubs": 85,
+  "dynamical_decoupling": "SamplerV2 dynamical_decoupling XpXm",
+  "measure_twirling": "SamplerV2 twirling.enable_measure",
+  "qpu_seconds_source": "job.usage()",
+  "execution": "batch submission (all jobs queued at once)"
+ }
+}

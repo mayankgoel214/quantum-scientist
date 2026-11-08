@@ -286,7 +286,7 @@
    "sim_engine": "pauli_frame"
   },
   "job_id": "dbnuf7dt7fqc73ak8im0",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794107293.238205,
   "plan": {
    "root": 117,
@@ -422,7 +422,7 @@
    "ci_high": 0.72681,
    "certified": true
   },
-  "last_status": "QUEUED"
+  "last_status": "DONE"
  },
  {
   "exp_id": "e004",
@@ -441,7 +441,7 @@
    "sim_engine": "pauli_frame"
   },
   "job_id": "dbnuf7oqtr0c73admn7g",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794107295.320718,
   "plan": {
    "root": 111,
@@ -617,7 +617,7 @@
    "ci_high": 0.82032,
    "certified": true
   },
-  "last_status": "QUEUED"
+  "last_status": "DONE"
  },
  {
   "exp_id": "e005",
@@ -636,7 +636,7 @@
    "sim_engine": "pauli_frame"
   },
   "job_id": "dbnuf8dt7fqc73ak8ing",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794107297.516005,
   "plan": {
    "root": 92,
@@ -852,7 +852,7 @@
    "ci_high": 0.75303,
    "certified": true
   },
-  "last_status": "QUEUED"
+  "last_status": "DONE"
  },
  {
   "exp_id": "e006",
@@ -871,7 +871,7 @@
    "sim_engine": "pauli_frame"
   },
   "job_id": "dbnuf8tt7fqc73ak8ip0",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794107300.003595,
   "plan": {
    "root": 107,
@@ -1127,7 +1127,7 @@
    "ci_high": 0.6766,
    "certified": true
   },
-  "last_status": "QUEUED"
+  "last_status": "DONE"
  },
  {
   "exp_id": "e007",
@@ -1146,7 +1146,7 @@
    "sim_engine": "pauli_frame"
   },
   "job_id": "dbnuf9gou4as73b570fg",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794107303.080845,
   "plan": {
    "root": 107,
@@ -1442,7 +1442,7 @@
    "ci_high": 0.63841,
    "certified": true
   },
-  "last_status": "QUEUED"
+  "last_status": "DONE"
  },
  {
   "exp_id": "e008",
@@ -1461,7 +1461,7 @@
    "sim_engine": "pauli_frame"
   },
   "job_id": "dbnufa8qtr0c73admne0",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794107306.045633,
   "plan": {
    "root": 107,
@@ -1777,6 +1777,6 @@
    "ci_high": 0.68232,
    "certified": true
   },
-  "last_status": "QUEUED"
+  "last_status": "DONE"
  }
 ]

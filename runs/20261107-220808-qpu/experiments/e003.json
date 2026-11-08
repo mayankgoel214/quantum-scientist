@@ -1,0 +1,388 @@
+{
+ "exp_id": "e003",
+ "spec": {
+  "n_qubits": 24,
+  "layout_strategy": "best_chain",
+  "root": null,
+  "exclude_qubits": [],
+  "circuit_variant": "linear",
+  "dynamical_decoupling": true,
+  "measure_twirling": true,
+  "readout_mitigation": true,
+  "shots": 1000,
+  "mode": "qpu",
+  "hypothesis": "This textbook linear-chain layout will show lower fidelity than weighted_tree at the same size.",
+  "sim_engine": "pauli_frame"
+ },
+ "physical_qubits": [
+  117,
+  105,
+  125,
+  106,
+  124,
+  107,
+  123,
+  108,
+  136,
+  109,
+  143,
+  110,
+  144,
+  111,
+  145,
+  98,
+  146,
+  91,
+  147,
+  90,
+  137,
+  89,
+  127,
+  88
+ ],
+ "tree_edges": [
+  [
+   117,
+   105
+  ],
+  [
+   117,
+   125
+  ],
+  [
+   105,
+   106
+  ],
+  [
+   125,
+   124
+  ],
+  [
+   106,
+   107
+  ],
+  [
+   124,
+   123
+  ],
+  [
+   107,
+   108
+  ],
+  [
+   123,
+   136
+  ],
+  [
+   108,
+   109
+  ],
+  [
+   136,
+   143
+  ],
+  [
+   109,
+   110
+  ],
+  [
+   143,
+   144
+  ],
+  [
+   110,
+   111
+  ],
+  [
+   144,
+   145
+  ],
+  [
+   111,
+   98
+  ],
+  [
+   145,
+   146
+  ],
+  [
+   98,
+   91
+  ],
+  [
+   146,
+   147
+  ],
+  [
+   91,
+   90
+  ],
+  [
+   147,
+   137
+  ],
+  [
+   90,
+   89
+  ],
+  [
+   137,
+   127
+  ],
+  [
+   89,
+   88
+  ]
+ ],
+ "root": 117,
+ "circuit_depth": 23,
+ "two_qubit_gate_count": 23,
+ "fidelity": 0.10745,
+ "ci_low": 0.03139,
+ "ci_high": 0.1629,
+ "populations": 0.13603,
+ "coherence": 0.07888,
+ "parity_curve": [
+  {
+   "phi": 0.0,
+   "parity": 0.0586
+  },
+  {
+   "phi": 0.125664,
+   "parity": -0.32553
+  },
+  {
+   "phi": 0.251327,
+   "parity": 0.07331
+  },
+  {
+   "phi": 0.376991,
+   "parity": -0.26673
+  },
+  {
+   "phi": 0.502655,
+   "parity": -0.0707
+  },
+  {
+   "phi": 0.628319,
+   "parity": 0.13397
+  },
+  {
+   "phi": 0.753982,
+   "parity": -0.06798
+  },
+  {
+   "phi": 0.879646,
+   "parity": -0.12161
+  },
+  {
+   "phi": 1.00531,
+   "parity": 0.01602
+  },
+  {
+   "phi": 1.130973,
+   "parity": -0.21784
+  },
+  {
+   "phi": 1.256637,
+   "parity": 0.01862
+  },
+  {
+   "phi": 1.382301,
+   "parity": 0.19856
+  },
+  {
+   "phi": 1.507964,
+   "parity": 0.19072
+  },
+  {
+   "phi": 1.633628,
+   "parity": 0.39959
+  },
+  {
+   "phi": 1.759292,
+   "parity": 0.1327
+  },
+  {
+   "phi": 1.884956,
+   "parity": 0.14277
+  },
+  {
+   "phi": 2.010619,
+   "parity": -0.40518
+  },
+  {
+   "phi": 2.136283,
+   "parity": -0.05217
+  },
+  {
+   "phi": 2.261947,
+   "parity": -0.13426
+  },
+  {
+   "phi": 2.38761,
+   "parity": -0.2339
+  },
+  {
+   "phi": 2.513274,
+   "parity": -0.04389
+  },
+  {
+   "phi": 2.638938,
+   "parity": -0.01196
+  },
+  {
+   "phi": 2.764602,
+   "parity": -0.19316
+  },
+  {
+   "phi": 2.890265,
+   "parity": 0.10879
+  },
+  {
+   "phi": 3.015929,
+   "parity": 0.17692
+  },
+  {
+   "phi": 3.141593,
+   "parity": -0.00308
+  },
+  {
+   "phi": 3.267256,
+   "parity": -0.18714
+  },
+  {
+   "phi": 3.39292,
+   "parity": 0.22092
+  },
+  {
+   "phi": 3.518584,
+   "parity": -0.06156
+  },
+  {
+   "phi": 3.644247,
+   "parity": 0.4496
+  },
+  {
+   "phi": 3.769911,
+   "parity": -0.2267
+  },
+  {
+   "phi": 3.895575,
+   "parity": 0.17225
+  },
+  {
+   "phi": 4.021239,
+   "parity": 0.55333
+  },
+  {
+   "phi": 4.146902,
+   "parity": 0.21592
+  },
+  {
+   "phi": 4.272566,
+   "parity": 0.41854
+  },
+  {
+   "phi": 4.39823,
+   "parity": -0.50664
+  },
+  {
+   "phi": 4.523893,
+   "parity": 0.41807
+  },
+  {
+   "phi": 4.649557,
+   "parity": -0.01718
+  },
+  {
+   "phi": 4.775221,
+   "parity": 0.10376
+  },
+  {
+   "phi": 4.900885,
+   "parity": -0.63757
+  },
+  {
+   "phi": 5.026548,
+   "parity": 0.28495
+  },
+  {
+   "phi": 5.152212,
+   "parity": -0.03758
+  },
+  {
+   "phi": 5.277876,
+   "parity": 0.36778
+  },
+  {
+   "phi": 5.403539,
+   "parity": 0.16901
+  },
+  {
+   "phi": 5.529203,
+   "parity": -0.05809
+  },
+  {
+   "phi": 5.654867,
+   "parity": 0.2971
+  },
+  {
+   "phi": 5.78053,
+   "parity": -0.1205
+  },
+  {
+   "phi": 5.906194,
+   "parity": -0.0219
+  },
+  {
+   "phi": 6.031858,
+   "parity": -0.19873
+  },
+  {
+   "phi": 6.157522,
+   "parity": -0.18156
+  }
+ ],
+ "certified": false,
+ "qpu_seconds": 18.0,
+ "wall_seconds": 22983.71,
+ "backend": "ibm_fez",
+ "job_ids": [
+  "dbnuf7dt7fqc73ak8im0"
+ ],
+ "error": null,
+ "predicted": {
+  "fidelity": 0.70466,
+  "ci_low": 0.68471,
+  "ci_high": 0.72681,
+  "certified": true
+ },
+ "transpiled_depth": 162,
+ "plan_depth": 12,
+ "sim_method": null,
+ "p_all0": 0.09087,
+ "p_all1": 0.04516,
+ "readout_rates": {
+  "mean_e0": 0.02583,
+  "mean_e1": 0.02758
+ },
+ "notes": {
+  "sampler_options": {
+   "default_shots": 1000,
+   "dynamical_decoupling": {
+    "enable": true,
+    "sequence_type": "XpXm"
+   },
+   "twirling": {
+    "enable_gates": false,
+    "enable_measure": true
+   }
+  },
+  "num_pubs": 53,
+  "dynamical_decoupling": "SamplerV2 dynamical_decoupling XpXm",
+  "measure_twirling": "SamplerV2 twirling.enable_measure",
+  "qpu_seconds_source": "job.usage()",
+  "execution": "batch submission (all jobs queued at once)"
+ }
+}

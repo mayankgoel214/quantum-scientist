@@ -1,0 +1,492 @@
+{
+ "exp_id": "e004",
+ "spec": {
+  "n_qubits": 32,
+  "layout_strategy": "weighted_tree",
+  "root": null,
+  "exclude_qubits": [],
+  "circuit_variant": "tree",
+  "dynamical_decoupling": true,
+  "measure_twirling": true,
+  "readout_mitigation": true,
+  "shots": 1000,
+  "mode": "qpu",
+  "hypothesis": "This larger weighted_tree circuit will likely still certify entanglement on real hardware.",
+  "sim_engine": "pauli_frame"
+ },
+ "physical_qubits": [
+  111,
+  98,
+  110,
+  91,
+  112,
+  109,
+  90,
+  118,
+  92,
+  89,
+  108,
+  129,
+  93,
+  88,
+  128,
+  94,
+  78,
+  87,
+  130,
+  127,
+  79,
+  95,
+  69,
+  86,
+  137,
+  73,
+  99,
+  68,
+  97,
+  85,
+  147,
+  115
+ ],
+ "tree_edges": [
+  [
+   111,
+   98
+  ],
+  [
+   111,
+   110
+  ],
+  [
+   98,
+   91
+  ],
+  [
+   111,
+   112
+  ],
+  [
+   110,
+   109
+  ],
+  [
+   91,
+   90
+  ],
+  [
+   109,
+   118
+  ],
+  [
+   91,
+   92
+  ],
+  [
+   90,
+   89
+  ],
+  [
+   109,
+   108
+  ],
+  [
+   118,
+   129
+  ],
+  [
+   92,
+   93
+  ],
+  [
+   89,
+   88
+  ],
+  [
+   129,
+   128
+  ],
+  [
+   93,
+   94
+  ],
+  [
+   89,
+   78
+  ],
+  [
+   88,
+   87
+  ],
+  [
+   129,
+   130
+  ],
+  [
+   128,
+   127
+  ],
+  [
+   93,
+   79
+  ],
+  [
+   94,
+   95
+  ],
+  [
+   78,
+   69
+  ],
+  [
+   87,
+   86
+  ],
+  [
+   127,
+   137
+  ],
+  [
+   79,
+   73
+  ],
+  [
+   95,
+   99
+  ],
+  [
+   69,
+   68
+  ],
+  [
+   87,
+   97
+  ],
+  [
+   86,
+   85
+  ],
+  [
+   137,
+   147
+  ],
+  [
+   99,
+   115
+  ]
+ ],
+ "root": 111,
+ "circuit_depth": 9,
+ "two_qubit_gate_count": 31,
+ "fidelity": 0.53714,
+ "ci_low": 0.3996,
+ "ci_high": 0.64095,
+ "populations": 0.57397,
+ "coherence": 0.50031,
+ "parity_curve": [
+  {
+   "phi": 0.0,
+   "parity": 0.50829
+  },
+  {
+   "phi": 0.0952,
+   "parity": -0.88462
+  },
+  {
+   "phi": 0.1904,
+   "parity": 0.68725
+  },
+  {
+   "phi": 0.285599,
+   "parity": -0.97797
+  },
+  {
+   "phi": 0.380799,
+   "parity": 0.76537
+  },
+  {
+   "phi": 0.475999,
+   "parity": -0.52364
+  },
+  {
+   "phi": 0.571199,
+   "parity": 0.39352
+  },
+  {
+   "phi": 0.666398,
+   "parity": 0.04198
+  },
+  {
+   "phi": 0.761598,
+   "parity": -0.03948
+  },
+  {
+   "phi": 0.856798,
+   "parity": 0.14473
+  },
+  {
+   "phi": 0.951998,
+   "parity": 0.23749
+  },
+  {
+   "phi": 1.047198,
+   "parity": -0.39662
+  },
+  {
+   "phi": 1.142397,
+   "parity": 0.13154
+  },
+  {
+   "phi": 1.237597,
+   "parity": 0.08978
+  },
+  {
+   "phi": 1.332797,
+   "parity": -0.60182
+  },
+  {
+   "phi": 1.427997,
+   "parity": 0.07646
+  },
+  {
+   "phi": 1.523196,
+   "parity": -0.01591
+  },
+  {
+   "phi": 1.618396,
+   "parity": -0.01006
+  },
+  {
+   "phi": 1.713596,
+   "parity": 0.16268
+  },
+  {
+   "phi": 1.808796,
+   "parity": 0.13864
+  },
+  {
+   "phi": 1.903996,
+   "parity": -0.77045
+  },
+  {
+   "phi": 1.999195,
+   "parity": -0.08368
+  },
+  {
+   "phi": 2.094395,
+   "parity": -0.40525
+  },
+  {
+   "phi": 2.189595,
+   "parity": 0.17369
+  },
+  {
+   "phi": 2.284795,
+   "parity": -0.61546
+  },
+  {
+   "phi": 2.379994,
+   "parity": 0.61723
+  },
+  {
+   "phi": 2.475194,
+   "parity": -0.6514
+  },
+  {
+   "phi": 2.570394,
+   "parity": 0.71566
+  },
+  {
+   "phi": 2.665594,
+   "parity": -0.11738
+  },
+  {
+   "phi": 2.760794,
+   "parity": 0.99463
+  },
+  {
+   "phi": 2.855993,
+   "parity": -0.92325
+  },
+  {
+   "phi": 2.951193,
+   "parity": 0.14425
+  },
+  {
+   "phi": 3.046393,
+   "parity": -0.81759
+  },
+  {
+   "phi": 3.141593,
+   "parity": 0.47087
+  },
+  {
+   "phi": 3.236792,
+   "parity": -0.61522
+  },
+  {
+   "phi": 3.331992,
+   "parity": 0.18655
+  },
+  {
+   "phi": 3.427192,
+   "parity": -0.46607
+  },
+  {
+   "phi": 3.522392,
+   "parity": -0.46225
+  },
+  {
+   "phi": 3.617592,
+   "parity": -0.34011
+  },
+  {
+   "phi": 3.712791,
+   "parity": -0.29826
+  },
+  {
+   "phi": 3.807991,
+   "parity": -0.18841
+  },
+  {
+   "phi": 3.903191,
+   "parity": 0.70959
+  },
+  {
+   "phi": 3.998391,
+   "parity": 0.02461
+  },
+  {
+   "phi": 4.09359,
+   "parity": -0.67857
+  },
+  {
+   "phi": 4.18879,
+   "parity": -0.34005
+  },
+  {
+   "phi": 4.28399,
+   "parity": 0.41622
+  },
+  {
+   "phi": 4.37919,
+   "parity": 0.25663
+  },
+  {
+   "phi": 4.47439,
+   "parity": -0.32139
+  },
+  {
+   "phi": 4.569589,
+   "parity": 0.15722
+  },
+  {
+   "phi": 4.664789,
+   "parity": -0.16289
+  },
+  {
+   "phi": 4.759989,
+   "parity": 0.75243
+  },
+  {
+   "phi": 4.855189,
+   "parity": -0.32708
+  },
+  {
+   "phi": 4.950388,
+   "parity": 0.3717
+  },
+  {
+   "phi": 5.045588,
+   "parity": -0.13895
+  },
+  {
+   "phi": 5.140788,
+   "parity": 0.17507
+  },
+  {
+   "phi": 5.235988,
+   "parity": -0.02865
+  },
+  {
+   "phi": 5.331188,
+   "parity": 0.70629
+  },
+  {
+   "phi": 5.426387,
+   "parity": -0.95551
+  },
+  {
+   "phi": 5.521587,
+   "parity": 1.15309
+  },
+  {
+   "phi": 5.616787,
+   "parity": 0.02013
+  },
+  {
+   "phi": 5.711987,
+   "parity": -0.15947
+  },
+  {
+   "phi": 5.807186,
+   "parity": 0.42901
+  },
+  {
+   "phi": 5.902386,
+   "parity": 0.78939
+  },
+  {
+   "phi": 5.997586,
+   "parity": -0.83724
+  },
+  {
+   "phi": 6.092786,
+   "parity": -0.20262
+  },
+  {
+   "phi": 6.187986,
+   "parity": -0.73665
+  }
+ ],
+ "certified": false,
+ "qpu_seconds": 22.0,
+ "wall_seconds": 22983.68,
+ "backend": "ibm_fez",
+ "job_ids": [
+  "dbnuf7oqtr0c73admn7g"
+ ],
+ "error": null,
+ "predicted": {
+  "fidelity": 0.79612,
+  "ci_low": 0.76804,
+  "ci_high": 0.82032,
+  "certified": true
+ },
+ "transpiled_depth": 37,
+ "plan_depth": 9,
+ "sim_method": null,
+ "p_all0": 0.25281,
+ "p_all1": 0.32116,
+ "readout_rates": {
+  "mean_e0": 0.02594,
+  "mean_e1": 0.02712
+ },
+ "notes": {
+  "sampler_options": {
+   "default_shots": 1000,
+   "dynamical_decoupling": {
+    "enable": true,
+    "sequence_type": "XpXm"
+   },
+   "twirling": {
+    "enable_gates": false,
+    "enable_measure": true
+   }
+  },
+  "num_pubs": 69,
+  "dynamical_decoupling": "SamplerV2 dynamical_decoupling XpXm",
+  "measure_twirling": "SamplerV2 twirling.enable_measure",
+  "qpu_seconds_source": "job.usage()",
+  "execution": "batch submission (all jobs queued at once)"
+ }
+}
