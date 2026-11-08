@@ -1,5 +1,10 @@
 # Q-Scientist — an autonomous AI physicist on IBM quantum hardware
 
+**Live:** https://q-scientist.vercel.app (replay of the real ibm_fez run) · **Paper:** [runs/20261107-220808-qpu/paper/paper.pdf](runs/20261107-220808-qpu/paper/paper.pdf)
+
+Publish a static snapshot: `uv run python -m scripts.export_static && cd site && vercel deploy --prod`
+
+
 An AI agent (Gemini) runs GHZ-entanglement experiments on its own — noisy simulator first,
 then a real IBM Heron QPU — trying to **certify genuine multipartite entanglement
 (fidelity lower confidence bound > 0.5) on as many qubits as possible**. It reasons out loud,

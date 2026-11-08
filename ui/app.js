@@ -189,11 +189,24 @@ async function getJSON(url) {
   if (!r.ok) throw new Error(`${r.status} ${url}`);
   return r.json();
 }
-const api = {
+// Static mode (Vercel snapshot built by scripts/export_static.py): same data, read from pre-exported files.
+const STATIC = !!window.QS_STATIC;
+const E = encodeURIComponent;
+const api = STATIC ? {
+  runs: () => getJSON('data/runs.json'),
+  events: async (id, since = -1) => {
+    const r = await getJSON(`data/${E(id)}/events.json`);
+    return { ...r, events: (r.events || []).filter((e) => e.seq > since) };
+  },
+  cal: (id) => getJSON(`data/${E(id)}/calibration.json`),
+  exp: (id, exp) => getJSON(`data/${E(id)}/experiments/${E(exp)}.json`),
+  paperUrl: (id) => `data/${E(id)}/paper/paper.html`,
+} : {
   runs: () => getJSON('/api/runs'),
-  events: (id, since = -1) => getJSON(`/api/runs/${encodeURIComponent(id)}/events?since=${since}`),
-  cal: (id) => getJSON(`/api/runs/${encodeURIComponent(id)}/calibration`),
-  exp: (id, exp) => getJSON(`/api/runs/${encodeURIComponent(id)}/experiments/${encodeURIComponent(exp)}`),
+  events: (id, since = -1) => getJSON(`/api/runs/${E(id)}/events?since=${since}`),
+  cal: (id) => getJSON(`/api/runs/${E(id)}/calibration`),
+  exp: (id, exp) => getJSON(`/api/runs/${E(id)}/experiments/${E(exp)}`),
+  paperUrl: (id) => `/api/runs/${E(id)}/paper/paper.html`,
 };
 
 /* ================================================================ chip map */
@@ -855,7 +868,7 @@ async function loadRun(id, { mode = null, at = null, autoplay = false } = {}) {
   const info = S.runs.find((r) => r.run_id === id) || {};
   const paper = $('#paperLink');
   paper.hidden = !info.has_paper;
-  paper.href = `/api/runs/${encodeURIComponent(id)}/paper/paper.html`;
+  paper.href = api.paperUrl(id);
   let cal = null, evs = [];
   try { cal = await api.cal(id); } catch { cal = null; }
   try { const r = await api.events(id, -1); evs = r.events || []; S.finished = !!r.finished; } catch { evs = []; }

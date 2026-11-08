@@ -85,6 +85,7 @@ Built with AI coding assistance (Claude) under the organizers' AI-allowed rule. 
 experiment-planning agent. Every number in the paper is computed from the run log, never typed by a model.
 
 ## Links
+- Live mission control (replay the night): https://q-scientist.vercel.app
 - Repo: https://github.com/mayankgoel214/quantum-scientist
 - Demo video: [TBD]
 - Paper PDF: https://github.com/mayankgoel214/quantum-scientist/blob/main/runs/20261107-220808-qpu/paper/paper.pdf
