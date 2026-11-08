@@ -191,6 +191,7 @@ async function getJSON(url) {
 }
 // Static mode (Vercel snapshot built by scripts/export_static.py): same data, read from pre-exported files.
 const STATIC = !!window.QS_STATIC;
+const POLL_MS = STATIC ? 60000 : 2000;  // static hosts rate-limit hammering; new results arrive by redeploy anyway
 const E = encodeURIComponent;
 const api = STATIC ? {
   runs: () => getJSON('data/runs.json'),
@@ -876,9 +877,9 @@ async function loadRun(id, { mode = null, at = null, autoplay = false } = {}) {
   S.cal = cal; S.events = evs;
   drawChip(cal);
   renderTicks();
-  setMode(mode || (info.finished === false ? 'live' : 'replay'), { reload: false });
+  setMode(mode || (info.finished === false && !STATIC ? 'live' : 'replay'), { reload: false });  // static snapshot: replay, no polling
   let cursor;
-  if (S.mode === 'live' || at === 'end') cursor = evs.length - 1;
+  if (S.mode === 'live' || at === 'end' || (STATIC && (at == null || at === ''))) cursor = evs.length - 1;  // land on the result; play restarts
   else if (at != null && at !== '' && !isNaN(Number(at))) cursor = Number(at);
   else cursor = Math.min(0, evs.length - 1);
   seek(cursor);
@@ -913,9 +914,9 @@ function startPolling() {
       S.finished = !!r.finished;
       renderTransport();
     } catch { /* server hiccup: keep polling */ }
-    if (tok === S.token && S.mode === 'live') S.pollTimer = setTimeout(tick, 2000);
+    if (tok === S.token && S.mode === 'live') S.pollTimer = setTimeout(tick, POLL_MS);
   };
-  S.pollTimer = setTimeout(tick, 2000);
+  S.pollTimer = setTimeout(tick, POLL_MS);
 }
 function stopPolling() { clearTimeout(S.pollTimer); S.pollTimer = null; }
 

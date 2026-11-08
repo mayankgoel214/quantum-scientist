@@ -30,7 +30,7 @@ it records its predictions before the data exists and confirms its own record be
 6. **Closes the loop.** In round 2 the agent reads its hardware results and its own prediction errors, then designs a
    follow-up that must include a **confirmation re-run of its record**. A best-of-several result is biased upward,
    so the record has to survive an independent repeat.
-7. **Writes the paper.** A 6-page PDF with abstract, methods, figures, a results table, limitations (including its own
+7. **Writes the paper.** A 5-page PDF with abstract, methods, figures, a results table, limitations (including its own
    selection bias) and the IBM job IDs for reproducibility. A mission-control web UI replays the night.
 
 ## Results (real hardware, ibm_fez)
@@ -41,7 +41,7 @@ it records its predictions before the data exists and confirms its own record be
 | Error-aware tree vs textbook chain (N = 24) | tree F = 0.723 on hardware; chain job still in IBM's public queue (twin predicts 0.705) |
 | Digital twin vs hardware | predicted certification correctly 2/2; overestimated F by 0.065 (N=16) and 0.143 (N=24) |
 | QPU time used | 31 s of the free 600 s (billed via `job.usage()`) |
-| LLM cost | 1 Gemini 2.5 Flash planning call (well under $0.01) |
+| LLM use | 7 Gemini 2.5 Flash calls: 1 to plan the experiments, 6 to polish the paper prose (well under $0.01) |
 
 Gemini submitted a batch of 8 hardware experiments (N = 16 to 60). `ibm_fez` had ~20,000 jobs queued, so by the
 deadline 2 had returned; the other 6 are still queued and their *pre-registered* twin predictions are published in

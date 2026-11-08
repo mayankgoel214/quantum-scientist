@@ -39,7 +39,7 @@ has to choose which qubits, which circuit shape, and how to spend 10 free minute
 the bootstrap CIs, and the IBM job IDs so anyone can check."
 
 **2:45 Close (15 s)**
-"Qiskit Runtime, SamplerV2 with DD and twirling, a custom Pauli-frame simulator, one Gemini planning call, and 31 seconds of free QPU. An AI scientist that keeps itself honest. Thank you."
+"Qiskit Runtime, SamplerV2 with DD and twirling, a custom Pauli-frame simulator, a few cents of Gemini, and 31 seconds of free QPU. An AI scientist that keeps itself honest. Thank you."
 
 ---
 
