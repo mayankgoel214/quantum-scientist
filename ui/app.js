@@ -506,9 +506,11 @@ async function renderParity() {
   const M = { l: 46, r: 14, t: 24, b: 30 };
   const phiMax = Math.max(2 * Math.PI, ...curve.map((p) => p.phi));
   const X = (phi) => M.l + (phi / phiMax) * (W - M.l - M.r);
-  const Y = (v) => M.t + (1 - (v + 1) / 2) * (H - M.t - M.b);
+  // readout mitigation can push noisy points past ±1: grow the axis instead of drawing outside the panel
+  const lim = Math.max(1, Math.ceil(Math.max(...curve.map((p) => Math.abs(p.parity))) * 2) / 2);
+  const Y = (v) => M.t + (1 - (v + lim) / (2 * lim)) * (H - M.t - M.b);
   const gA = s('g', { class: 'axis' }, svg);
-  for (const v of [-1, -0.5, 0, 0.5, 1]) {
+  for (const v of [-lim, -lim / 2, 0, lim / 2, lim]) {
     s('line', { x1: M.l, x2: W - M.r, y1: Y(v), y2: Y(v), class: v === 0 ? 'zero' : 'grid-line' }, gA);
     s('text', { x: M.l - 8, y: Y(v) + 4, 'text-anchor': 'end' }, gA).textContent = v.toFixed(1);
   }
