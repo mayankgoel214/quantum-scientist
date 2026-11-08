@@ -12,15 +12,27 @@ respects a hard QPU/LLM budget, and writes its own paper at the end.
 
 ## Results on real hardware (IBM `ibm_fez`, 156-qubit Heron)
 
-| GHZ size | Twin prediction (frozen before the run) | Hardware fidelity [95% CI] | Genuinely entangled? |
+| GHZ size · layout | Twin prediction (frozen before the run) | Hardware fidelity [95% CI] | Genuinely entangled? |
 |---|---|---|---|
-| 16 qubits | 0.906 | **0.841** [0.820, 0.862] | ✅ certified |
-| **24 qubits** | 0.866 | **0.723** [0.700, 0.746] | ✅ certified (record) |
+| 16 · error-aware tree | 0.906 | **0.841** [0.820, 0.862] | ✅ certified |
+| 24 · error-aware tree | 0.866 | **0.723** [0.700, 0.746] | ✅ certified |
+| 24 · textbook chain | 0.705 | 0.107 [0.031, 0.163] | ❌ |
+| 32 · error-aware tree | 0.796 | 0.537 [0.400, 0.641] | ❌ (lower bound below 0.5) |
+| **40 · error-aware tree** | 0.727 | **0.654** [0.520, 0.788] | ✅ **certified (record)** |
+| 48 · error-aware tree | 0.648 | 0.455 [0.344, 0.555] | ❌ |
+| 56 · error-aware tree | 0.604 | 0.319 [0.196, 0.465] | ❌ |
+| 60 · error-aware tree | 0.642 | 0.244 [0.031, 0.394] | ❌ |
 
-Gemini designed a batch of 8 hardware experiments (16 to 60 qubits). The public queue held about 20,000 jobs, so 2 returned
-before the deadline; the other 6 are still queued, and their pre-registered predictions are in `runs/20261107-220808-qpu/pending.json`.
-**Finding:** the digital twin predicted certification correctly 2/2, but its fidelity error doubled with size (0.065 → 0.143),
-which points to correlated noise that per-gate calibration data doesn't capture. 31 s of QPU used, out of 600 s free.
+All 8 experiments were designed by Gemini in one batch and queued behind ~20,000 public jobs; they returned overnight.
+**Findings:**
+- **Layout is the difference between entangled and not.** At 24 qubits the agent's error-aware tree reached F = 0.723,
+  while the textbook linear CNOT chain on the same chip collapsed to 0.107.
+- **Record: 40 qubits certified**, but by a narrow margin (lower bound 0.520) and 32 qubits did not certify, so the
+  agent's round 2 re-runs the record with 2× shots as an independent confirmation (queued on IBM; see `pending.json`).
+- **The digital twin is honest about its limits:** it called certification right in 3 of 8 cases and overestimated
+  fidelity more as N grew, pointing to correlated noise that per-gate calibration data doesn't capture.
+
+207 s of QPU used, out of 600 s free.
 
 ![Fidelity vs N](runs/20261107-220808-qpu/paper/fig_fidelity_vs_n.png)
 ![GHZ tree on the chip](runs/20261107-220808-qpu/paper/fig_chip_map.png)

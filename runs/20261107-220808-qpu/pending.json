@@ -1778,5 +1778,786 @@
    "certified": true
   },
   "last_status": "DONE"
+ },
+ {
+  "exp_id": "e009",
+  "spec": {
+   "n_qubits": 40,
+   "layout_strategy": "weighted_tree",
+   "root": null,
+   "exclude_qubits": [],
+   "circuit_variant": "tree",
+   "dynamical_decoupling": true,
+   "measure_twirling": true,
+   "readout_mitigation": true,
+   "shots": 2000,
+   "mode": "qpu",
+   "hypothesis": "Re-running the largest certified experiment with more shots will provide a more robust estimate of its true fidelity and test for upward bias.",
+   "sim_engine": "pauli_frame",
+   "confirmation_of": "e005"
+  },
+  "job_id": "dbo4738ou4as73b5fts0",
+  "status": "submitted",
+  "submitted_at": 1794130829.248406,
+  "round": 2,
+  "plan": {
+   "root": 92,
+   "qubits": [
+    92,
+    91,
+    93,
+    90,
+    79,
+    98,
+    89,
+    94,
+    73,
+    111,
+    88,
+    95,
+    74,
+    110,
+    78,
+    87,
+    99,
+    75,
+    112,
+    109,
+    69,
+    97,
+    115,
+    59,
+    118,
+    70,
+    86,
+    107,
+    114,
+    55,
+    68,
+    71,
+    85,
+    106,
+    54,
+    67,
+    58,
+    84,
+    105,
+    104
+   ],
+   "tree_edges": [
+    [
+     92,
+     91
+    ],
+    [
+     92,
+     93
+    ],
+    [
+     91,
+     90
+    ],
+    [
+     93,
+     79
+    ],
+    [
+     91,
+     98
+    ],
+    [
+     90,
+     89
+    ],
+    [
+     93,
+     94
+    ],
+    [
+     79,
+     73
+    ],
+    [
+     98,
+     111
+    ],
+    [
+     89,
+     88
+    ],
+    [
+     94,
+     95
+    ],
+    [
+     73,
+     74
+    ],
+    [
+     111,
+     110
+    ],
+    [
+     89,
+     78
+    ],
+    [
+     88,
+     87
+    ],
+    [
+     95,
+     99
+    ],
+    [
+     74,
+     75
+    ],
+    [
+     111,
+     112
+    ],
+    [
+     110,
+     109
+    ],
+    [
+     78,
+     69
+    ],
+    [
+     87,
+     97
+    ],
+    [
+     99,
+     115
+    ],
+    [
+     75,
+     59
+    ],
+    [
+     109,
+     118
+    ],
+    [
+     69,
+     70
+    ],
+    [
+     87,
+     86
+    ],
+    [
+     97,
+     107
+    ],
+    [
+     115,
+     114
+    ],
+    [
+     59,
+     55
+    ],
+    [
+     69,
+     68
+    ],
+    [
+     70,
+     71
+    ],
+    [
+     86,
+     85
+    ],
+    [
+     107,
+     106
+    ],
+    [
+     55,
+     54
+    ],
+    [
+     68,
+     67
+    ],
+    [
+     71,
+     58
+    ],
+    [
+     85,
+     84
+    ],
+    [
+     106,
+     105
+    ],
+    [
+     105,
+     104
+    ]
+   ],
+   "depth": 10
+  },
+  "circuit_depth": 10,
+  "two_qubit_gate_count": 39,
+  "transpiled_depth": 44,
+  "num_pubs": 85,
+  "predicted": {
+   "fidelity": 0.72593,
+   "ci_low": 0.70493,
+   "ci_high": 0.74469,
+   "certified": true
+  }
+ },
+ {
+  "exp_id": "e010",
+  "spec": {
+   "n_qubits": 36,
+   "layout_strategy": "weighted_tree",
+   "root": null,
+   "exclude_qubits": [],
+   "circuit_variant": "tree",
+   "dynamical_decoupling": true,
+   "measure_twirling": true,
+   "readout_mitigation": true,
+   "shots": 1000,
+   "mode": "qpu",
+   "hypothesis": "Probing N=36 with 'weighted_tree' will help determine if it can be certified, bridging the gap between N=32 (uncertified) and N=40 (certified).",
+   "sim_engine": "pauli_frame"
+  },
+  "job_id": "dbo473tt7fqc73akhc70",
+  "status": "submitted",
+  "submitted_at": 1794130831.350196,
+  "round": 2,
+  "plan": {
+   "root": 92,
+   "qubits": [
+    92,
+    91,
+    93,
+    90,
+    79,
+    98,
+    89,
+    94,
+    73,
+    111,
+    88,
+    95,
+    74,
+    110,
+    78,
+    87,
+    99,
+    75,
+    112,
+    109,
+    69,
+    86,
+    115,
+    59,
+    118,
+    68,
+    97,
+    85,
+    114,
+    55,
+    70,
+    67,
+    107,
+    84,
+    54,
+    71
+   ],
+   "tree_edges": [
+    [
+     92,
+     91
+    ],
+    [
+     92,
+     93
+    ],
+    [
+     91,
+     90
+    ],
+    [
+     93,
+     79
+    ],
+    [
+     91,
+     98
+    ],
+    [
+     90,
+     89
+    ],
+    [
+     93,
+     94
+    ],
+    [
+     79,
+     73
+    ],
+    [
+     98,
+     111
+    ],
+    [
+     89,
+     88
+    ],
+    [
+     94,
+     95
+    ],
+    [
+     73,
+     74
+    ],
+    [
+     111,
+     110
+    ],
+    [
+     89,
+     78
+    ],
+    [
+     88,
+     87
+    ],
+    [
+     95,
+     99
+    ],
+    [
+     74,
+     75
+    ],
+    [
+     111,
+     112
+    ],
+    [
+     110,
+     109
+    ],
+    [
+     78,
+     69
+    ],
+    [
+     87,
+     86
+    ],
+    [
+     99,
+     115
+    ],
+    [
+     75,
+     59
+    ],
+    [
+     109,
+     118
+    ],
+    [
+     69,
+     68
+    ],
+    [
+     87,
+     97
+    ],
+    [
+     86,
+     85
+    ],
+    [
+     115,
+     114
+    ],
+    [
+     59,
+     55
+    ],
+    [
+     69,
+     70
+    ],
+    [
+     68,
+     67
+    ],
+    [
+     97,
+     107
+    ],
+    [
+     85,
+     84
+    ],
+    [
+     55,
+     54
+    ],
+    [
+     70,
+     71
+    ]
+   ],
+   "depth": 9
+  },
+  "circuit_depth": 9,
+  "two_qubit_gate_count": 35,
+  "transpiled_depth": 37,
+  "num_pubs": 77,
+  "predicted": {
+   "fidelity": 0.77626,
+   "ci_low": 0.74757,
+   "ci_high": 0.80317,
+   "certified": true
+  }
+ },
+ {
+  "exp_id": "e011",
+  "spec": {
+   "n_qubits": 24,
+   "layout_strategy": "bfs_tree",
+   "root": null,
+   "exclude_qubits": [],
+   "circuit_variant": "tree",
+   "dynamical_decoupling": true,
+   "measure_twirling": true,
+   "readout_mitigation": true,
+   "shots": 1000,
+   "mode": "qpu",
+   "hypothesis": "Comparing 'bfs_tree' to 'weighted_tree' for N=24 will evaluate if an alternative tree-based layout offers similar or improved performance.",
+   "sim_engine": "pauli_frame"
+  },
+  "job_id": "dbo47444148s7391u70g",
+  "status": "submitted",
+  "submitted_at": 1794130833.091937,
+  "round": 2,
+  "plan": {
+   "root": 97,
+   "qubits": [
+    97,
+    107,
+    87,
+    106,
+    88,
+    108,
+    105,
+    86,
+    89,
+    109,
+    104,
+    85,
+    78,
+    118,
+    117,
+    103,
+    77,
+    90,
+    69,
+    110,
+    129,
+    125,
+    84,
+    111
+   ],
+   "tree_edges": [
+    [
+     97,
+     107
+    ],
+    [
+     97,
+     87
+    ],
+    [
+     107,
+     106
+    ],
+    [
+     87,
+     88
+    ],
+    [
+     107,
+     108
+    ],
+    [
+     106,
+     105
+    ],
+    [
+     87,
+     86
+    ],
+    [
+     88,
+     89
+    ],
+    [
+     108,
+     109
+    ],
+    [
+     105,
+     104
+    ],
+    [
+     86,
+     85
+    ],
+    [
+     89,
+     78
+    ],
+    [
+     109,
+     118
+    ],
+    [
+     105,
+     117
+    ],
+    [
+     104,
+     103
+    ],
+    [
+     85,
+     77
+    ],
+    [
+     89,
+     90
+    ],
+    [
+     78,
+     69
+    ],
+    [
+     109,
+     110
+    ],
+    [
+     118,
+     129
+    ],
+    [
+     117,
+     125
+    ],
+    [
+     85,
+     84
+    ],
+    [
+     110,
+     111
+    ]
+   ],
+   "depth": 7
+  },
+  "circuit_depth": 7,
+  "two_qubit_gate_count": 23,
+  "transpiled_depth": 26,
+  "num_pubs": 53,
+  "predicted": {
+   "fidelity": 0.84485,
+   "ci_low": 0.82176,
+   "ci_high": 0.86729,
+   "certified": true
+  }
+ },
+ {
+  "exp_id": "e012",
+  "spec": {
+   "n_qubits": 28,
+   "layout_strategy": "weighted_tree",
+   "root": null,
+   "exclude_qubits": [],
+   "circuit_variant": "tree",
+   "dynamical_decoupling": true,
+   "measure_twirling": true,
+   "readout_mitigation": true,
+   "shots": 1000,
+   "mode": "qpu",
+   "hypothesis": "Testing N=28 with 'weighted_tree' will further refine the certification boundary between N=24 and N=32.",
+   "sim_engine": "pauli_frame"
+  },
+  "job_id": "dbo474k4148s7391u71g",
+  "status": "submitted",
+  "submitted_at": 1794130834.92175,
+  "round": 2,
+  "plan": {
+   "root": 88,
+   "qubits": [
+    88,
+    87,
+    89,
+    97,
+    78,
+    86,
+    107,
+    90,
+    69,
+    85,
+    106,
+    70,
+    84,
+    108,
+    105,
+    68,
+    71,
+    109,
+    104,
+    58,
+    110,
+    117,
+    103,
+    118,
+    111,
+    96,
+    129,
+    112
+   ],
+   "tree_edges": [
+    [
+     88,
+     87
+    ],
+    [
+     88,
+     89
+    ],
+    [
+     87,
+     97
+    ],
+    [
+     89,
+     78
+    ],
+    [
+     87,
+     86
+    ],
+    [
+     97,
+     107
+    ],
+    [
+     89,
+     90
+    ],
+    [
+     78,
+     69
+    ],
+    [
+     86,
+     85
+    ],
+    [
+     107,
+     106
+    ],
+    [
+     69,
+     70
+    ],
+    [
+     85,
+     84
+    ],
+    [
+     107,
+     108
+    ],
+    [
+     106,
+     105
+    ],
+    [
+     69,
+     68
+    ],
+    [
+     70,
+     71
+    ],
+    [
+     108,
+     109
+    ],
+    [
+     105,
+     104
+    ],
+    [
+     71,
+     58
+    ],
+    [
+     109,
+     110
+    ],
+    [
+     105,
+     117
+    ],
+    [
+     104,
+     103
+    ],
+    [
+     109,
+     118
+    ],
+    [
+     110,
+     111
+    ],
+    [
+     103,
+     96
+    ],
+    [
+     118,
+     129
+    ],
+    [
+     111,
+     112
+    ]
+   ],
+   "depth": 9
+  },
+  "circuit_depth": 9,
+  "two_qubit_gate_count": 27,
+  "transpiled_depth": 37,
+  "num_pubs": 61,
+  "predicted": {
+   "fidelity": 0.81488,
+   "ci_low": 0.79151,
+   "ci_high": 0.8373,
+   "certified": true
+  }
  }
 ]
