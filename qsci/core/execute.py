@@ -248,12 +248,12 @@ def _qpu_seconds(job) -> float | None:
     return None
 
 
-def run_qpu(prep: dict, backend, state: dict | None = None) -> tuple[dict, dict, list[str], float | None]:
-    """ONE SamplerV2 job (job mode) with every circuit as its own PUB."""
+def submit_qpu(prep: dict, backend):
+    """Submit ONE SamplerV2 job (job mode) with every circuit as its own PUB. Returns the job
+    without waiting (so many experiments can sit in the IBM queue at once)."""
     from qiskit_ibm_runtime import SamplerV2
 
     s = prep["spec"]
-    n_par = 2 * s["n_qubits"] + 2
     pubs, _ = build_qpu_pubs(prep)
     sampler = SamplerV2(mode=backend)
     o = sampler_options(s)
@@ -264,27 +264,42 @@ def run_qpu(prep: dict, backend, state: dict | None = None) -> tuple[dict, dict,
     if "twirling" in o:
         sampler.options.twirling.enable_gates = False
         sampler.options.twirling.enable_measure = True
-    job = sampler.run(pubs)
-    job_id = job.job_id()
-    if state is not None:
-        state["job_ids"] = [job_id]  # recorded BEFORE waiting, so a failure still reports/charges it
-    res = job.result()
+    return sampler.run(pubs)
+
+
+def counts_from_result(res, n_qubits: int, has_cal: bool) -> dict:
+    n_par = 2 * n_qubits + 2
 
     def counts_of(i):
         return getattr(res[i].data, "c").get_counts()
 
-    counts = {
+    return {
         "populations": counts_of(0),
         "parity": [counts_of(1 + j) for j in range(n_par)],
-        "cal0": counts_of(1 + n_par) if prep["cal"] else None,
-        "cal1": counts_of(2 + n_par) if prep["cal"] else None,
+        "cal0": counts_of(1 + n_par) if has_cal else None,
+        "cal1": counts_of(2 + n_par) if has_cal else None,
     }
-    notes = {
-        "sampler_options": o,
-        "num_pubs": len(pubs),
+
+
+def qpu_notes(spec: dict, num_pubs: int) -> dict:
+    s = normalize_spec(spec)
+    return {
+        "sampler_options": sampler_options(s),
+        "num_pubs": num_pubs,
         "dynamical_decoupling": "SamplerV2 dynamical_decoupling XpXm" if s["dynamical_decoupling"] else "off",
         "measure_twirling": "SamplerV2 twirling.enable_measure" if s["measure_twirling"] else "off",
     }
+
+
+def run_qpu(prep: dict, backend, state: dict | None = None) -> tuple[dict, dict, list[str], float | None]:
+    """Submit and wait (blocking path used by the agent loop)."""
+    job = submit_qpu(prep, backend)
+    job_id = job.job_id()
+    if state is not None:
+        state["job_ids"] = [job_id]  # recorded BEFORE waiting, so a failure still reports/charges it
+    res = job.result()
+    counts = counts_from_result(res, prep["spec"]["n_qubits"], bool(prep["cal"]))
+    notes = qpu_notes(prep["spec"], len(build_qpu_pubs(prep)[0]))
     return counts, notes, [job_id], _qpu_seconds(job)
 
 
