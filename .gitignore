@@ -7,3 +7,4 @@ runs/*
 !runs/20261107-220808-qpu/
 site/
 .vercel/
+.vercel-link-tmp/

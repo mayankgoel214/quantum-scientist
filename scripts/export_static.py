@@ -17,9 +17,15 @@ from scripts.serve_ui import ROOT, RUNS_DIR, UI_DIR, _read_events, _sort_key, _s
 
 
 def export(out: Path, run_ids: list[str] | None) -> list[str]:
+    keep = out / ".vercel"  # the Vercel project link survives re-exports
+    saved = None
+    if keep.is_dir():
+        saved = Path(shutil.copytree(keep, out.parent / ".vercel-link-tmp", dirs_exist_ok=True))
     if out.exists():
         shutil.rmtree(out)
     shutil.copytree(UI_DIR, out)
+    if saved:
+        shutil.move(str(saved), str(keep))
     idx = out / "index.html"
     html = idx.read_text()
     html = html.replace('<script src="app.js"></script>',
