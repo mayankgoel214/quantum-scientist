@@ -15,24 +15,28 @@ respects a hard QPU/LLM budget, and writes its own paper at the end.
 | GHZ size · layout | Twin prediction (frozen before the run) | Hardware fidelity [95% CI] | Genuinely entangled? |
 |---|---|---|---|
 | 16 · error-aware tree | 0.906 | **0.841** [0.820, 0.862] | ✅ certified |
-| 24 · error-aware tree | 0.866 | **0.723** [0.700, 0.746] | ✅ certified |
+| **24 · error-aware tree** | 0.866 | **0.723** [0.700, 0.746] | ✅ certified |
+| **24 · shallow BFS tree** (round 2) | 0.845 | **0.842** [0.720, 0.972] | ✅ certified: **confirmed record** |
 | 24 · textbook chain | 0.705 | 0.107 [0.031, 0.163] | ❌ |
-| 32 · error-aware tree | 0.796 | 0.537 [0.400, 0.641] | ❌ (lower bound below 0.5) |
-| **40 · error-aware tree** | 0.727 | **0.654** [0.520, 0.788] | ✅ **certified (record)** |
-| 48 · error-aware tree | 0.648 | 0.455 [0.344, 0.555] | ❌ |
-| 56 · error-aware tree | 0.604 | 0.319 [0.196, 0.465] | ❌ |
-| 60 · error-aware tree | 0.642 | 0.244 [0.031, 0.394] | ❌ |
+| 28 · error-aware tree (round 2) | 0.815 | 0.580 [0.444, 0.703] | ❌ |
+| 32 · error-aware tree | 0.796 | 0.537 [0.400, 0.641] | ❌ |
+| 36 · error-aware tree (round 2) | 0.776 | 0.489 [0.327, 0.609] | ❌ |
+| 40 · error-aware tree | 0.727 | 0.654 [0.520, 0.788] | ✅ certified, then **withdrawn** ↓ |
+| 40 · same qubits, 2× shots (round 2 confirmation) | 0.726 | 0.414 [0.326, 0.486] | ❌ confirmation failed |
+| 48 / 56 / 60 · error-aware tree | 0.648 / 0.604 / 0.642 | 0.455 / 0.319 / 0.244 | ❌ |
 
-All 8 experiments were designed by Gemini in one batch and queued behind ~20,000 public jobs; they returned overnight.
 **Findings:**
+- **Confirmed record: 24 qubits** of genuine multipartite entanglement, certified in two independent experiments with
+  different layouts (F = 0.723 and 0.842).
+- **The AI caught its own false positive.** Round 1 certified 40 qubits by a hair (lower bound 0.520). The agent's
+  pre-registered confirmation re-ran it on the same qubits with twice the shots and got F = 0.414, so the paper, the
+  site and the agent's log withdraw it. Best-of-several selection biases records upward; this run shows it happening.
 - **Layout is the difference between entangled and not.** At 24 qubits the agent's error-aware tree reached F = 0.723,
   while the textbook linear CNOT chain on the same chip collapsed to 0.107.
-- **Record: 40 qubits certified**, but by a narrow margin (lower bound 0.520) and 32 qubits did not certify, so the
-  agent's round 2 re-runs the record with 2× shots as an independent confirmation (queued on IBM; see `pending.json`).
-- **The digital twin is honest about its limits:** it called certification right in 3 of 8 cases and overestimated
-  fidelity more as N grew, pointing to correlated noise that per-gate calibration data doesn't capture.
+- **The digital twin is honest about its limits:** it predicted all 12 experiments would certify; 4 did. Its
+  overestimate grows with N, pointing to correlated noise that per-gate calibration data doesn't capture.
 
-207 s of QPU used, out of 600 s free.
+12 hardware experiments in two rounds, 322 s of QPU used out of 600 s free.
 
 ![Fidelity vs N](runs/20261107-220808-qpu/paper/fig_fidelity_vs_n.png)
 ![GHZ tree on the chip](runs/20261107-220808-qpu/paper/fig_chip_map.png)
