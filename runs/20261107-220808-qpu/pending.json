@@ -2013,7 +2013,8 @@
    "ci_low": 0.70493,
    "ci_high": 0.74469,
    "certified": true
-  }
+  },
+  "last_status": "RUNNING"
  },
  {
   "exp_id": "e010",
@@ -2228,7 +2229,8 @@
    "ci_low": 0.74757,
    "ci_high": 0.80317,
    "certified": true
-  }
+  },
+  "last_status": "RUNNING"
  },
  {
   "exp_id": "e011",
@@ -2247,7 +2249,7 @@
    "sim_engine": "pauli_frame"
   },
   "job_id": "dbo47444148s7391u70g",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794130833.091937,
   "round": 2,
   "plan": {
@@ -2383,7 +2385,8 @@
    "ci_low": 0.82176,
    "ci_high": 0.86729,
    "certified": true
-  }
+  },
+  "last_status": "DONE"
  },
  {
   "exp_id": "e012",
@@ -2402,7 +2405,7 @@
    "sim_engine": "pauli_frame"
   },
   "job_id": "dbo474k4148s7391u71g",
-  "status": "submitted",
+  "status": "collected",
   "submitted_at": 1794130834.92175,
   "round": 2,
   "plan": {
@@ -2558,6 +2561,7 @@
    "ci_low": 0.79151,
    "ci_high": 0.8373,
    "certified": true
-  }
+  },
+  "last_status": "DONE"
  }
 ]

@@ -1,0 +1,440 @@
+{
+ "exp_id": "e012",
+ "spec": {
+  "n_qubits": 28,
+  "layout_strategy": "weighted_tree",
+  "root": null,
+  "exclude_qubits": [],
+  "circuit_variant": "tree",
+  "dynamical_decoupling": true,
+  "measure_twirling": true,
+  "readout_mitigation": true,
+  "shots": 1000,
+  "mode": "qpu",
+  "hypothesis": "Testing N=28 with 'weighted_tree' will further refine the certification boundary between N=24 and N=32.",
+  "sim_engine": "pauli_frame"
+ },
+ "physical_qubits": [
+  88,
+  87,
+  89,
+  97,
+  78,
+  86,
+  107,
+  90,
+  69,
+  85,
+  106,
+  70,
+  84,
+  108,
+  105,
+  68,
+  71,
+  109,
+  104,
+  58,
+  110,
+  117,
+  103,
+  118,
+  111,
+  96,
+  129,
+  112
+ ],
+ "tree_edges": [
+  [
+   88,
+   87
+  ],
+  [
+   88,
+   89
+  ],
+  [
+   87,
+   97
+  ],
+  [
+   89,
+   78
+  ],
+  [
+   87,
+   86
+  ],
+  [
+   97,
+   107
+  ],
+  [
+   89,
+   90
+  ],
+  [
+   78,
+   69
+  ],
+  [
+   86,
+   85
+  ],
+  [
+   107,
+   106
+  ],
+  [
+   69,
+   70
+  ],
+  [
+   85,
+   84
+  ],
+  [
+   107,
+   108
+  ],
+  [
+   106,
+   105
+  ],
+  [
+   69,
+   68
+  ],
+  [
+   70,
+   71
+  ],
+  [
+   108,
+   109
+  ],
+  [
+   105,
+   104
+  ],
+  [
+   71,
+   58
+  ],
+  [
+   109,
+   110
+  ],
+  [
+   105,
+   117
+  ],
+  [
+   104,
+   103
+  ],
+  [
+   109,
+   118
+  ],
+  [
+   110,
+   111
+  ],
+  [
+   103,
+   96
+  ],
+  [
+   118,
+   129
+  ],
+  [
+   111,
+   112
+  ]
+ ],
+ "root": 88,
+ "circuit_depth": 9,
+ "two_qubit_gate_count": 27,
+ "fidelity": 0.57967,
+ "ci_low": 0.44425,
+ "ci_high": 0.70339,
+ "populations": 0.59313,
+ "coherence": 0.56621,
+ "parity_curve": [
+  {
+   "phi": 0.0,
+   "parity": 0.6195
+  },
+  {
+   "phi": 0.108331,
+   "parity": -0.16793
+  },
+  {
+   "phi": 0.216662,
+   "parity": 0.65231
+  },
+  {
+   "phi": 0.324992,
+   "parity": -0.92026
+  },
+  {
+   "phi": 0.433323,
+   "parity": 0.36195
+  },
+  {
+   "phi": 0.541654,
+   "parity": -0.86729
+  },
+  {
+   "phi": 0.649985,
+   "parity": 0.24441
+  },
+  {
+   "phi": 0.758315,
+   "parity": 0.37864
+  },
+  {
+   "phi": 0.866646,
+   "parity": 0.66729
+  },
+  {
+   "phi": 0.974977,
+   "parity": -0.84285
+  },
+  {
+   "phi": 1.083308,
+   "parity": 0.12179
+  },
+  {
+   "phi": 1.191639,
+   "parity": -0.60615
+  },
+  {
+   "phi": 1.299969,
+   "parity": -0.11755
+  },
+  {
+   "phi": 1.4083,
+   "parity": -0.2908
+  },
+  {
+   "phi": 1.516631,
+   "parity": 0.39891
+  },
+  {
+   "phi": 1.624962,
+   "parity": 0.21956
+  },
+  {
+   "phi": 1.733292,
+   "parity": -0.83626
+  },
+  {
+   "phi": 1.841623,
+   "parity": 0.69867
+  },
+  {
+   "phi": 1.949954,
+   "parity": 0.16021
+  },
+  {
+   "phi": 2.058285,
+   "parity": 0.28058
+  },
+  {
+   "phi": 2.166616,
+   "parity": -0.38469
+  },
+  {
+   "phi": 2.274946,
+   "parity": 0.23306
+  },
+  {
+   "phi": 2.383277,
+   "parity": -0.61669
+  },
+  {
+   "phi": 2.491608,
+   "parity": 0.68483
+  },
+  {
+   "phi": 2.599939,
+   "parity": -0.44343
+  },
+  {
+   "phi": 2.70827,
+   "parity": 0.61153
+  },
+  {
+   "phi": 2.8166,
+   "parity": -0.37634
+  },
+  {
+   "phi": 2.924931,
+   "parity": 0.96541
+  },
+  {
+   "phi": 3.033262,
+   "parity": 0.0727
+  },
+  {
+   "phi": 3.141593,
+   "parity": 0.91955
+  },
+  {
+   "phi": 3.249923,
+   "parity": -0.77556
+  },
+  {
+   "phi": 3.358254,
+   "parity": 0.91206
+  },
+  {
+   "phi": 3.466585,
+   "parity": -0.47736
+  },
+  {
+   "phi": 3.574916,
+   "parity": 1.06336
+  },
+  {
+   "phi": 3.683247,
+   "parity": -0.8394
+  },
+  {
+   "phi": 3.791577,
+   "parity": -0.06507
+  },
+  {
+   "phi": 3.899908,
+   "parity": 0.15621
+  },
+  {
+   "phi": 4.008239,
+   "parity": 0.20078
+  },
+  {
+   "phi": 4.11657,
+   "parity": -0.15832
+  },
+  {
+   "phi": 4.2249,
+   "parity": 0.02489
+  },
+  {
+   "phi": 4.333231,
+   "parity": -0.05669
+  },
+  {
+   "phi": 4.441562,
+   "parity": 0.53641
+  },
+  {
+   "phi": 4.549893,
+   "parity": 0.11154
+  },
+  {
+   "phi": 4.658224,
+   "parity": 0.37101
+  },
+  {
+   "phi": 4.766554,
+   "parity": 0.02517
+  },
+  {
+   "phi": 4.874885,
+   "parity": -0.18784
+  },
+  {
+   "phi": 4.983216,
+   "parity": 0.30001
+  },
+  {
+   "phi": 5.091547,
+   "parity": 0.14464
+  },
+  {
+   "phi": 5.199877,
+   "parity": 0.31299
+  },
+  {
+   "phi": 5.308208,
+   "parity": -0.89914
+  },
+  {
+   "phi": 5.416539,
+   "parity": 0.64092
+  },
+  {
+   "phi": 5.52487,
+   "parity": -0.18562
+  },
+  {
+   "phi": 5.633201,
+   "parity": 0.21695
+  },
+  {
+   "phi": 5.741531,
+   "parity": -0.23403
+  },
+  {
+   "phi": 5.849862,
+   "parity": 0.09476
+  },
+  {
+   "phi": 5.958193,
+   "parity": -0.14562
+  },
+  {
+   "phi": 6.066524,
+   "parity": 0.31919
+  },
+  {
+   "phi": 6.174855,
+   "parity": -1.1687
+  }
+ ],
+ "certified": false,
+ "qpu_seconds": 20.0,
+ "wall_seconds": 71.14,
+ "backend": "ibm_fez",
+ "job_ids": [
+  "dbo474k4148s7391u71g"
+ ],
+ "error": null,
+ "predicted": {
+  "fidelity": 0.81488,
+  "ci_low": 0.79151,
+  "ci_high": 0.8373,
+  "certified": true
+ },
+ "transpiled_depth": 37,
+ "plan_depth": 9,
+ "sim_method": null,
+ "p_all0": 0.3871,
+ "p_all1": 0.20602,
+ "readout_rates": {
+  "mean_e0": 0.02718,
+  "mean_e1": 0.02625
+ },
+ "notes": {
+  "sampler_options": {
+   "default_shots": 1000,
+   "dynamical_decoupling": {
+    "enable": true,
+    "sequence_type": "XpXm"
+   },
+   "twirling": {
+    "enable_gates": false,
+    "enable_measure": true
+   }
+  },
+  "num_pubs": 61,
+  "dynamical_decoupling": "SamplerV2 dynamical_decoupling XpXm",
+  "measure_twirling": "SamplerV2 twirling.enable_measure",
+  "qpu_seconds_source": "job.usage()",
+  "execution": "batch submission (all jobs queued at once)"
+ }
+}
