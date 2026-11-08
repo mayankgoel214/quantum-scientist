@@ -223,7 +223,8 @@ class Paper:
         budget = (f", spending {f.qpu_seconds_used:.0f} s of a {f.max_qpu_seconds:.0f} s QPU budget"
                   if self.n_qpu and f.max_qpu_seconds else "")
         if f.batch:
-            how = (f"{self.planner_phrase()} designed a batch of {self.n_qpu} hardware experiments in a single planning step "
+            how = (f"{self.planner_phrase()} designed a batch of {len(self.f.pending) or self.n_qpu} hardware experiments in a single planning step "
+                   f"({self.n_qpu} had returned from the queue when this paper was generated) "
                    f"(the public queue made adaptive scheduling impossible); before submission every experiment was predicted by a "
                    f"digital twin, a noise simulation driven by the live calibration{budget}. ")
         else:

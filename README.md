@@ -12,6 +12,12 @@ uv run python -m scripts.run_agent --mode sim            # free: simulator only
 uv run python -m scripts.run_agent --mode qpu            # real hardware (budget-capped)
 uv run python -m scripts.run_agent --mode sim --llm fake # no keys needed: scripted policy
 uv run python -m scripts.run_sweep --mode qpu --ns 16,24,32   # no-AI fallback
+
+# Queue-aware hardware run (what we used on ibm_fez, where the open queue holds ~20k jobs):
+uv run python -m scripts.qpu_batch submit --backend ibm_fez           # Gemini designs a batch, digital twin predicts, all jobs submitted at once
+uv run python -m scripts.qpu_batch collect runs/<run_id> --watch      # gather results as IBM finishes them
+uv run python -m scripts.qpu_batch extend runs/<run_id>               # round 2: agent reads hardware results, confirms its record
+uv run python -m scripts.check_keys                                   # which keys are set (never prints values)
 uv run python -m scripts.write_paper runs/<run_id>        # paper.html + paper.pdf
 uv run python -m scripts.serve_ui                         # mission control at http://localhost:8765
 uv run python -m pytest -q                                # 60 tests
