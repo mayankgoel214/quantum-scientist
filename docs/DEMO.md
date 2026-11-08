@@ -24,22 +24,24 @@ has to choose which qubits, which circuit shape, and how to spend 10 free minute
 - Parity plot: "This oscillation at frequency N is the fingerprint of an N-qubit coherence. It's how we measure the
   entanglement, not just the populations."
 
-**1:35 Results (40 s)**. Fidelity panel and paper Fig. 5.
-- "24 qubits certified on real hardware, F = 0.723, lower bound 0.700, well above the 0.5 line. 16 qubits at 0.841."
-- "Gemini submitted 8 experiments up to 60 qubits, but ibm_fez had 20,000 jobs queued. Two came back; the rest
-  are still queued, with their predictions already frozen on disk, so they're checkable the moment they land."
-- "The twin got certification right both times, but its error doubled from 0.07 at 16 qubits to 0.14 at 24.
-  Error growing with N is the signature of correlated noise that calibration numbers don't capture. That's a
-  finding, and we could only make it because the predictions were frozen first."
-- "Round 2 is built: when the queue clears, the agent reads its results and must re-run its own record to confirm
-  it, because the best of several noisy runs is biased upward."
+**1:35 Results (40 s)**. Big number on the site, then paper Fig. 5.
+- "All 12 hardware experiments came back overnight. Confirmed record: 24 qubits, certified twice with two different
+  layouts, F = 0.723 and 0.842. The threshold is 0.5."
+- "The best moment of the night: round 1 certified 40 qubits, just barely, lower bound 0.520. A best-of-several
+  result is biased upward, so the agent is forced to re-run its record before claiming it. Same qubits, twice the
+  shots: 0.414. Failed. So it withdrew the claim, in its log, on this site and in its paper. It caught its own
+  false positive."
+- "Layout is the difference between entangled and not: at 24 qubits the AI's error-aware tree got 0.723, the
+  textbook CNOT chain on the same chip got 0.107."
+- "The digital twin predicted all 12 would certify; 4 did. Its error grows with size, the signature of correlated
+  noise calibration data doesn't capture, and we only know that because predictions were frozen first."
 
 **2:15 The paper (30 s)**. Scroll the PDF.
 "Every number here is computed from the run log, never typed by the model. It includes its own limitations section,
 the bootstrap CIs, and the IBM job IDs so anyone can check."
 
 **2:45 Close (15 s)**
-"Qiskit Runtime, SamplerV2 with DD and twirling, a custom Pauli-frame simulator, a few cents of Gemini, and 31 seconds of free QPU. An AI scientist that keeps itself honest. Thank you."
+"Qiskit Runtime, SamplerV2 with DD and twirling, a custom Pauli-frame simulator, a few cents of Gemini, and about 5 minutes of free QPU. An AI scientist that keeps itself honest. Thank you."
 
 ---
 
@@ -50,3 +52,5 @@ the bootstrap CIs, and the IBM job IDs so anyone can check."
   Validators only enforce safety rules (budget, a small anchor, the confirmation run).
 - *Why not bigger N?* No error detection or post-selection yet. That's the next step, and the twin's errors show
   where the noise model is wrong.
+- *Wasn't 40 a real result?* It cleared the bar once by 0.02 and failed an identical re-run (0.414). Could be a
+  lucky draw or calibration drift; either way it's not reproducible, so it's not claimed.
