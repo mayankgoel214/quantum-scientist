@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Certified genuine multipartite entanglement of a 24-qubit GHZ state on ibm_fez, found by an autonomous AI scientist</title>
+<style>
+@page { size: Letter; margin: 0.7in 0.68in 0.75in 0.68in;
+  @bottom-center { content: counter(page); font: 8pt 'STIX Two Text', 'Times New Roman', serif; color: #555; } }
+:root { --ink: #1b1b1b; --dim: #5b5b5b; --rule: #c9c9c9; --accent: #1f4e8c; }
+* { box-sizing: border-box; }
+html { background: #ecebe8; }
+body { font-family: 'STIX Two Text', 'Times New Roman', Times, serif; font-size: 9.7pt; line-height: 1.32;
+  color: var(--ink); background: #fff; max-width: 8.5in; margin: 24px auto; padding: 0.7in 0.68in;
+  box-shadow: 0 2px 18px rgba(0,0,0,.12); font-kerning: normal; font-variant-numeric: lining-nums; }
+@media print { html { background: #fff; } body { margin: 0; padding: 0; box-shadow: none; max-width: none; } }
+.preprint { display: flex; justify-content: space-between; font-size: 7.6pt; color: var(--dim);
+  border-bottom: 0.6pt solid var(--rule); padding-bottom: 3pt; margin-bottom: 16pt; letter-spacing: .02em; }
+h1 { font-size: 16.5pt; line-height: 1.2; text-align: center; margin: 0 0.25in 8pt; font-weight: 600; }
+.authors { text-align: center; font-size: 10.5pt; margin-bottom: 2pt; }
+.affil { text-align: center; font-size: 8.3pt; color: var(--dim); font-style: italic; margin-bottom: 2pt; }
+.date { text-align: center; font-size: 8.3pt; color: var(--dim); margin-bottom: 12pt; }
+.abstract { margin: 0 0.42in 12pt; font-size: 9pt; text-align: justify; hyphens: auto; }
+.abstract p { margin: 0; text-indent: 0; }
+.abstract h2 { font-size: 8.6pt; text-align: center; text-transform: uppercase; letter-spacing: .14em; margin: 0 0 3pt; }
+.cols { column-count: 2; column-gap: 0.26in; text-align: justify; hyphens: auto; orphans: 3; widows: 3; }
+h2 { font-size: 10pt; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; margin: 11pt 0 4pt;
+  break-after: avoid; text-align: left; }
+h3 { font-size: 9.7pt; font-style: italic; font-weight: 600; margin: 7pt 0 2pt; break-after: avoid; text-align: left; }
+p { margin: 0 0 4pt; text-indent: 1.1em; }
+h2 + p, h3 + p, .eq + p, figure + p, blockquote + p { text-indent: 0; }
+.eq { display: flex; justify-content: center; align-items: center; position: relative; margin: 5pt 0 6pt;
+  font-size: 10pt; text-align: center; break-inside: avoid; }
+.eqn { position: absolute; right: 0; color: var(--dim); font-size: 9pt; }
+.frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 2pt;
+  font-size: 0.9em; line-height: 1.1; }
+.frac > span:first-child { border-bottom: 0.6pt solid currentColor; padding: 0 2pt; }
+.m { white-space: nowrap; }
+sub, sup { font-size: 0.72em; line-height: 0; }
+a { color: var(--accent); text-decoration: none; }
+figure { margin: 6pt 0 8pt; break-inside: avoid; }
+figure img { width: 100%; display: block; }
+figure.wide { column-span: all; margin: 8pt 0 10pt; }
+figcaption { font-size: 8.1pt; line-height: 1.28; margin-top: 3pt; text-align: justify; color: #262626; }
+figure.table figcaption { margin: 0 0 4pt; }
+blockquote { margin: 4pt 0 6pt; padding: 3pt 0 3pt 8pt; border-left: 1.6pt solid var(--accent);
+  font-size: 8.8pt; break-inside: avoid; background: #f6f8fb; }
+blockquote p { text-indent: 0; margin: 0; font-style: italic; }
+blockquote footer { font-size: 7.6pt; color: var(--dim); text-align: right; margin-top: 1pt; }
+table { border-collapse: collapse; width: 100%; font-size: 7.8pt; font-variant-numeric: tabular-nums; }
+thead th { border-top: 0.9pt solid #000; border-bottom: 0.6pt solid #000; padding: 2.5pt 4pt; font-weight: 600; text-align: right; }
+tbody td { padding: 1.6pt 4pt; text-align: right; white-space: nowrap; }
+tbody tr:last-child td { border-bottom: 0.9pt solid #000; }
+th.l, td.l { text-align: left; }
+tr.rec td { background: #eef3fa; }
+.ok { color: #2a7f62; font-weight: 700; } .no { color: #b5443b; font-weight: 700; } .err { color: #7a7a7a; font-style: italic; }
+.dim { color: var(--dim); }
+table.kv { font-size: 8pt; margin: 2pt 0 6pt; }
+table.kv td { text-align: left; white-space: normal; padding: 1.4pt 3pt; vertical-align: top; border: 0; }
+table.kv td:first-child { color: var(--dim); width: 34%; }
+table.kv tr:last-child td { border-bottom: 0; }
+code { font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 0.8em; }
+.jobs code { word-break: break-all; }
+p code { overflow-wrap: anywhere; }
+.jobs { font-size: 7.6pt; text-indent: 0; }
+ol.refs { font-size: 7.9pt; padding-left: 1.6em; margin: 0; text-align: left; }
+ol.refs li { margin-bottom: 2pt; }
+.colophon { column-span: all; margin-top: 12pt; padding-top: 4pt; border-top: 0.6pt solid var(--rule);
+  font-size: 7.4pt; color: var(--dim); text-align: center; }
+</style></head>
+<body>
+<div class="preprint"><span>Q-Scientist preprint · run 20261107-220808-qpu</span><span>Record: N = 24, F = 0.723 [0.700, 0.746]</span></div>
+<h1>Certified genuine multipartite entanglement of a 24-qubit GHZ state on ibm_fez, found by an autonomous AI scientist</h1>
+<div class="authors">Q-Scientist (autonomous agent, Gemini) and Mayank Goel</div>
+<div class="affil">Q-Scientist autonomous laboratory · Qiskit Fall Fest 2026</div>
+<div class="date">November 8, 2026</div>
+<div class="abstract"><h2>Abstract</h2><p>We report an autonomous search for large Greenberger–Horne–Zeilinger (GHZ) states on the 156-qubit IBM processor ibm_fez. A language-model agent (gemini-2.5-flash) designed a batch of 8 hardware experiments in a single planning step (2 had returned from the queue when this paper was generated) (the public queue made adaptive scheduling impossible); before submission every experiment was predicted by a digital twin, a noise simulation driven by the live calibration, spending 31 s of a 480 s QPU budget. Fidelity to the ideal GHZ state was estimated from population and parity-oscillation measurements, with bootstrap confidence intervals, and genuine multipartite entanglement was claimed only when the lower confidence bound exceeded 1/2. On hardware the agent certified an N = 24 GHZ state with F = 0.723 (CI 0.700–0.746). The digital twin overestimated hardware fidelity by 0.07 to 0.14 across 2 sizes, quantifying the noise it does not model. We discuss the statistical strength of the record, the role of error mitigation, and the limits of an agent that selects its own best result. This paper was generated automatically from the run log.</p></div>
+<div class="cols">
+<h2>1&ensp;Introduction</h2>
+
+<p>Greenberger–Horne–Zeilinger (GHZ) states [<a href="#ref-ghz89">1</a>, <a href="#ref-ghz90">2</a>],
+<span class="m">|GHZ<sub>N</sub>⟩ = (|0⟩<sup>⊗N</sup> + |1⟩<sup>⊗N</sup>)/√2</span>, are the canonical maximally
+entangled states of <i>N</i> qubits. Because their single coherence term
+|0…0⟩⟨1…1| dephases <i>N</i> times faster than a single qubit, the largest GHZ state a device can prepare is a
+compact, demanding benchmark of its two-qubit gates, readout and coherence all at once. GHZ states of increasing
+size have marked progress across platforms, from trapped ions [<a href="#ref-monz11">5</a>] to Rydberg atoms [<a href="#ref-omran19">6</a>]
+and superconducting circuits [<a href="#ref-song19">7</a>, <a href="#ref-mooney21">8</a>], and today's processors with more than a hundred qubits [<a href="#ref-kim23">9</a>] make
+much larger states conceivable.</p>
+<p>Preparing a state is not the same as proving it is entangled. A standard witness [<a href="#ref-guhne09">3</a>, <a href="#ref-toth05">4</a>]
+uses the fidelity <i>F</i> = ⟨GHZ<sub>N</sub>|ρ|GHZ<sub>N</sub>⟩: any state with <i>F</i> &gt; 1/2 is
+<em>genuinely multipartite entangled</em> (GME), i.e. it cannot be written as a mixture of states that are
+separable across any bipartition. We therefore treat certification as a statistical claim:
+the lower end of a confidence interval on <i>F</i> must exceed 1/2.</p>
+<p>Scaling the certified <i>N</i> on a 156-qubit heavy-hex processor [<a href="#ref-chamberland20">10</a>] is a search
+problem over layouts, circuit shapes and mitigation settings under a tight hardware budget. In this work the
+search was run end-to-end by an autonomous agent built on a large language model (Gemini), which proposed every
+experiment, predicted each hardware result with a digital twin before it ran, and wrote this report.
+The human operator set the goal and budget, and did not intervene in experiment selection.</p>
+
+<figure class="col"><img src="fig_fidelity_vs_n.png" alt="Figure 1"><figcaption><b>Figure 1.</b> GHZ fidelity versus size for every successful experiment. Error bars: bootstrap confidence intervals. Filled markers are certified (lower bound above 1/2); open markers are not. Dotted lines: exponential fits <i>F</i><sub>0</sub>e<sup>−<i>N</i>/<i>N</i><sub>e</sub></sup>. Shaded: region below the GME threshold.</figcaption></figure>
+<h2>2&ensp;Methods</h2>
+
+<h3>2.1 Hardware and calibration</h3>
+<p>Experiments targeted <b>ibm_fez</b>, a 156-qubit IBM Heron processor with
+176 tunable couplers arranged in a heavy-hex lattice and native CZ entangling gates.
+At the start of the run the agent recorded a live calibration query (timestamp 2026-11-08T03:07:49+00:00).
+Median values across the chip were
+T<sub>1</sub> = 148 µs, T<sub>2</sub> = 107 µs,
+readout error 1.07%,
+single-qubit (√X) error 2.9×10<sup>−4</sup> and
+two-qubit error 0.28%. The snapshot (Fig. 3) drove layout
+selection and the noise model of the simulator: a Pauli-frame simulation (depolarizing gate errors, per-layer T<sub>1</sub>/T<sub>2</sub> idle
+decoherence from real gate durations, and readout error) that keeps the per-qubit and per-coupler noise of
+the physical qubits actually used. Hardware runs, where present, need no such approximation.</p>
+
+<h3>2.2 Layouts and GHZ circuits</h3>
+<p>A GHZ state on <i>N</i> physical qubits is prepared by a Hadamard on a root qubit followed by CNOTs
+(compiled to CZ) fanning out along a spanning tree of the coupling graph, so the entangling depth scales with
+the tree height rather than with <i>N</i>. The agent chose among layout strategies: <i>best_chain</i> selects a low-error one-dimensional path through the coupling graph; <i>weighted_tree</i> grows a spanning tree outward from a root qubit, at each step adding the neighbouring qubit with the lowest combined cost of CZ error, readout error and dephasing (from the calibration snapshot), with a penalty on tree depth, which steers the state away from poorly calibrated couplers.
+It could also exclude specific qubits and select a linear (chain) circuit instead of a tree. For the record experiment (e002, N = 24) the tree has 23 two-qubit gates arranged in 8 layers of two-qubit-gate depth (total transpiled depth 32).</p>
+
+<h3>2.3 Fidelity estimation</h3>
+<p>Following Refs. [<a href="#ref-omran19">6</a>, <a href="#ref-mooney21">8</a>], the fidelity splits into a population and a coherence term,</p>
+<div class="eq"><span><i>F</i> = ½ (<i>P</i> + <i>C</i>),&ensp; <i>P</i> = <i>p</i>(0…0) + <i>p</i>(1…1),</span><span class="eqn">(1)</span></div>
+<p>where <i>P</i> is read off a computational-basis measurement. The coherence <i>C</i> = 2|ρ<sub>0…0,1…1</sub>| is
+obtained from parity oscillations: after preparing the state, every qubit receives a phase rotation
+R<sub>z</sub>(φ) and is measured in the <i>X</i> basis, and the parity</p>
+<div class="eq"><span>⟨𝒫(φ)⟩ = Σ<sub><i>x</i></sub> (−1)<sup>|<i>x</i>|</sup> <i>p</i><sub>φ</sub>(<i>x</i>) = <i>C</i> cos(<i>N</i>φ + δ)</span><span class="eqn">(2)</span></div>
+<p>is sampled at the 2<i>N</i> + 2 phases φ<sub><i>j</i></sub> = <i>j</i>π/(<i>N</i> + 1), <i>j</i> = 0,…,2<i>N</i>+1.
+Only a GHZ-type coherence oscillates at frequency <i>N</i>, so <i>C</i> is its Fourier amplitude,</p>
+<div class="eq"><span><i>C</i> = <span class="frac"><span>1</span><span><i>N</i>+1</span></span>
+ | Σ<sub><i>j</i></sub> e<sup><i>iN</i>φ<sub><i>j</i></sub></sup> ⟨𝒫(φ<sub><i>j</i></sub>)⟩ |.</span><span class="eqn">(3)</span></div>
+<p>Each experiment therefore runs 2<i>N</i> + 3 circuits (1000 shots each), plus two readout-calibration circuits when
+mitigation is on. A 95% confidence interval on <i>F</i> comes from a percentile bootstrap that resamples the shots of
+every circuit independently [<a href="#ref-efron79">13</a>], and an experiment is <em>certified</em> when
+<span class="m"><i>F</i><sub>low</sub> &gt; 1/2</span>, which by the witness of Refs. [<a href="#ref-guhne09">3</a>, <a href="#ref-toth05">4</a>]
+implies genuine multipartite entanglement of the prepared state. Error suppression and mitigation: readout-error mitigation in 100% of experiments, inverting per-qubit (tensored) confusion matrices estimated from all-|0⟩ and all-|1⟩ calibration circuits; because both the GHZ populations and the parity are product-form functionals of the bitstring, this inversion is applied exactly, shot by shot; on hardware experiments, XpXm dynamical decoupling on idle qubits [<a href="#ref-viola99">11</a>] (100%) and measurement twirling [<a href="#ref-vdberg22">12</a>] (100%) via the Qiskit Runtime sampler; these are not modelled in simulation.
+Circuits were built and transpiled with Qiskit [<a href="#ref-qiskit24">14</a>], keeping the planned physical layout fixed.</p>
+
+<figure class="col"><img src="fig_chip_map.png" alt="Figure 3"><figcaption><b>Figure 3.</b> Calibration snapshot of ibm_fez: couplers coloured by CZ error, with the GHZ tree of e002 highlighted (root ★; ✕ marks qubits excluded by the agent).</figcaption></figure>
+<h2>3&ensp;The autonomous agent</h2>
+
+<p>In its interactive mode the agent runs a closed loop over simulator and hardware experiments. On the public
+queue of ibm_fez, however, a single job can wait hours, so a loop that waits for each result could finish only
+one or two hardware experiments in a night. For this run the agent therefore designed the entire hardware batch in one
+planning step. Its context was the live calibration summary, its own earlier simulator results and a cost table for
+each experiment size. Every proposed experiment was then checked by a validator, which enforces a safe small-<i>N</i>
+anchor, a matched tree-versus-chain comparison and the QPU budget. Each experiment was also run through a digital
+twin (the noise simulator of §2.1 driven by the <em>live</em> calibration) to record a prediction <em>before</em> the
+hardware result existed. All jobs were then submitted at once and collected as they completed.</p>
+<p>The batch was: e001: N = 16 weighted_tree; e002: N = 24 weighted_tree; e003: N = 24 best_chain; e004: N = 32 weighted_tree; e005: N = 40 weighted_tree; e006: N = 48 weighted_tree; e007: N = 56 weighted_tree; e008: N = 60 weighted_tree. It used 1 of its 1 permitted model calls and 31.0 of 480 QPU seconds (6%). The agent's stated rationale, verbatim:</p>
+<blockquote><p>“This batch is designed to meet all requirements: a robust anchor, a direct comparison between 'weighted_tree' and 'best_chain', and an exploration of the hardware frontier for 'weighted_tree'. The N=16 anchor ensures a certified result even if larger experiments fail. The N=24 matched pair will directly assess if the error-aware 'weighted_tree' layout outperforms the textbook 'best_chain' on real hardware. The remaining experiments progressively increase N for 'weighted_tree' up to N=60, aiming to identify the maximum number of qubits for certified entanglement on ibm_fez, anticipating a lower frontier than simulator results due to real-world noise. All experiments use 1000 shots to maximize confidence in fidelity estimation within the budget.”</p><footer>— agent, batch plan</footer></blockquote>
+
+<figure class="wide"><img src="fig_timeline.png" alt="Figure 4"><figcaption><b>Figure 4.</b> Timeline of the run. Top: qubit number of each experiment against wall-clock time, coloured by outcome; the line tracks the certified hardware record. Bottom: cumulative fraction of the QPU-time and LLM-call budgets consumed.</figcaption></figure>
+<h2>4&ensp;Results</h2>
+<p>The largest state certified on hardware is the <b>N = 24</b> GHZ state of experiment e002 (Table 1), with <i>F</i> = 0.723 and confidence interval [0.700, 0.746]: the lower bound clears the GME threshold by 0.200. Its populations and coherence are <i>P</i> = 0.743 and <i>C</i> = 0.703; as is typical, the coherence term limits the fidelity. The state used a weighted_tree layout rooted at q88 (Fig. 3) whose couplers have a mean CZ error of 0.30% and mean readout error 1.06%, against chip medians of 0.28% and 1.07%.</p>
+<p>Figure 2 shows the parity oscillation of e002. For a GHZ-type coherence, folding the 50 phase settings by <i>N</i>φ collapses them onto a single cosine, the signature of an <i>N</i>-body coherence. An independent least-squares fit of Eq. (2) gives amplitude 0.703 (residual RMS 0.074), consistent with the estimator value <i>C</i> = 0.703.</p>
+<p>Fidelity decays roughly exponentially with size (Fig. 1). Fitting <i>F</i>(<i>N</i>) = <i>F</i><sub>0</sub> e<sup>−<i>N</i>/<i>N</i><sub>e</sub></sup> to the central values gives hardware: <i>N</i><sub>e</sub> ≈ 53, crossing <i>F</i> = 1/2 near <i>N</i> ≈ 44; simulation: <i>N</i><sub>e</sub> ≈ 125, crossing <i>F</i> = 1/2 near <i>N</i> ≈ 85. These fits are descriptive only; they ignore the different layouts used at each size.</p>
+<p><b>Prediction versus hardware.</b> Across 2 hardware experiments the digital twin overestimated fidelity by 0.104 on average (range +0.065 to +0.143) and predicted the certification outcome correctly in 2 of 2 cases. Because every prediction was recorded before submission, this is an honest out-of-sample test of the noise model.</p>
+<figure class="col"><img src="fig_twin_layout.png" alt="Figure 5"><figcaption><b>Figure 5.</b> Hardware fidelity (circles, bootstrap CI; filled = certified) against the digital-twin prediction recorded before submission (squares, dashed), for the error-aware tree and the textbook linear chain.</figcaption></figure>
+<p>Figure 4 places every experiment on the run's timeline together with budget consumption.</p>
+<figure class="wide"><img src="fig_parity.png" alt="Figure 2"><figcaption><b>Figure 2.</b> Parity oscillation of e002 (<i>N</i> = 24, hardware). (i) Measured parity at each phase φ<sub><i>j</i></sub> with the fitted <i>C</i> cos(<i>N</i>φ + δ). (ii) The same points folded onto one period.</figcaption></figure>
+
+<figure class="wide table">
+<figcaption><b>Table 1.</b> All experiments in chronological order. HW = ibm_fez; sim = noisy simulator; twin = digital-twin prediction recorded before submission.
+Layout “(−k)” marks k qubits excluded by the agent. <i>P</i>, <i>C</i>, <i>F</i> as in Eqs. (1)–(3); CI is the
+bootstrap confidence interval; ✓ = certified (<i>F</i><sub>low</sub> &gt; 1/2). Shaded rows are the records.</figcaption>
+<table>
+<thead><tr><th>ID</th><th>Mode</th><th><i>N</i></th><th class="l">Layout</th><th>2q depth</th><th><i>P</i></th><th><i>C</i></th><th><i>F</i></th><th>CI</th><th>GME</th><th>QPU s</th></tr></thead>
+<tbody><tr><td>e001</td><td>HW</td><td>16</td><td class='l'>weighted_tree</td><td>6</td><td>0.829</td><td>0.852</td><td><b>0.841</b></td><td>[0.820, 0.862]</td><td><span class="ok">✓</span></td><td>13.00</td></tr><tr><td>e001-twin</td><td>twin</td><td>16</td><td class='l'>weighted_tree</td><td>6</td><td>–</td><td>–</td><td><b>0.906</b></td><td>[0.890, 0.921]</td><td><span class="ok">✓</span></td><td>–</td></tr><tr class="rec"><td>e002</td><td>HW</td><td>24</td><td class='l'>weighted_tree</td><td>8</td><td>0.743</td><td>0.703</td><td><b>0.723</b></td><td>[0.700, 0.746]</td><td><span class="ok">✓</span></td><td>18.00</td></tr><tr><td>e002-twin</td><td>twin</td><td>24</td><td class='l'>weighted_tree</td><td>8</td><td>–</td><td>–</td><td><b>0.866</b></td><td>[0.843, 0.885]</td><td><span class="ok">✓</span></td><td>–</td></tr><tr><td>e003-twin</td><td>twin</td><td>24</td><td class='l'>best_chain / linear</td><td>23</td><td>–</td><td>–</td><td><b>0.705</b></td><td>[0.685, 0.727]</td><td><span class="ok">✓</span></td><td>–</td></tr><tr><td>e004-twin</td><td>twin</td><td>32</td><td class='l'>weighted_tree</td><td>9</td><td>–</td><td>–</td><td><b>0.796</b></td><td>[0.768, 0.820]</td><td><span class="ok">✓</span></td><td>–</td></tr><tr><td>e005-twin</td><td>twin</td><td>40</td><td class='l'>weighted_tree</td><td>10</td><td>–</td><td>–</td><td><b>0.727</b></td><td>[0.698, 0.753]</td><td><span class="ok">✓</span></td><td>–</td></tr><tr><td>e006-twin</td><td>twin</td><td>48</td><td class='l'>weighted_tree</td><td>11</td><td>–</td><td>–</td><td><b>0.648</b></td><td>[0.614, 0.677]</td><td><span class="ok">✓</span></td><td>–</td></tr><tr><td>e007-twin</td><td>twin</td><td>56</td><td class='l'>weighted_tree</td><td>11</td><td>–</td><td>–</td><td><b>0.604</b></td><td>[0.569, 0.638]</td><td><span class="ok">✓</span></td><td>–</td></tr><tr><td>e008-twin</td><td>twin</td><td>60</td><td class='l'>weighted_tree</td><td>11</td><td>–</td><td>–</td><td><b>0.642</b></td><td>[0.600, 0.682]</td><td><span class="ok">✓</span></td><td>–</td></tr></tbody>
+</table>
+</figure>
+<h2>5&ensp;Discussion and limitations</h2>
+<p><b>Statistical caveats.</b> The record lower bound exceeds 1/2 by only 0.200, a comfortable margin. The interval reflects shot noise alone; it does not include drift between the 51 circuits of the experiment or between experiments. More importantly, the agent chose which configurations to run and which result to call a record: 1 hardware experiments were run within four qubits of the record size, and reporting the best of several noisy estimates biases the headline upward. No correction for this selection was applied. A pre-registered confirmation run of the identical specification, ideally with more shots, is the appropriate next step before treating N = 24 as established.</p>
+<p><b>Error mitigation.</b> Readout-error mitigation was enabled in 100% of experiments. It reweights measured populations and parities through the inverse of a per-qubit confusion model, so the certified fidelity is a property of the mitigated estimator rather than of raw counts. The model assumes readout errors that are uncorrelated across qubits and free of crosstalk, and the error rates are estimated from just two calibration circuits whose own shot noise is not propagated into the bootstrap interval, so the interval is somewhat too narrow. A conservative reading of the result would require the unmitigated fidelity to also exceed 1/2, which we did not separately establish.</p>
+<p><b>Simulation versus hardware.</b> The digital twin overestimated hardware fidelity at every matched size, by 0.07 to 0.14. The noise model is built from a single calibration snapshot and omits crosstalk, leakage, non-Markovian dephasing and temporal drift, so the gap is expected to grow with N and with circuit duration. Because the twin predictions were frozen before the jobs ran, the size of this gap is a direct, unbiased measurement of how much of the device's error budget the model misses.</p>
+<p><b>Scope and other limitations.</b> The run lasted 0.1 hours on one calibration snapshot, during which device parameters can drift. A fidelity above 1/2 certifies genuine multipartite entanglement but does not characterize the full state, and the witness depends on the assumption that the measurements are the intended ones. Finally, the agent's search was short and greedy; it explored a small part of the space of roots, layouts and settings, so larger certified states on this device are plausible.</p>
+<h2>6&ensp;Reproducibility</h2>
+
+<table class="kv">
+<tr><td>Run ID</td><td><code>20261107-220808-qpu</code></td></tr>
+<tr><td>Run mode / backend</td><td>qpu / ibm_fez</td></tr>
+<tr><td>Run start / end</td><td>2026-11-08 03:08 UTC / 2026-11-08 03:16 UTC</td></tr>
+<tr><td>Calibration</td><td>live backend query, 2026-11-08T03:07:49+00:00</td></tr>
+<tr><td>Budget used</td><td>31.0 / 480 QPU s; 1 / 1 LLM calls</td></tr>
+<tr><td>Agent model</td><td>gemini:gemini-2.5-flash</td></tr>
+<tr><td>Software</td><td>qiskit 2.6.2, qiskit-ibm-runtime 0.51.0, qiskit-aer 0.18.2, numpy 2.5.4</td></tr>
+</table>
+<p>Hardware job IDs:</p>
+<p class='jobs'>e001: <code>dbnuf68ou4as73b57070</code>; e002: <code>dbnuf6oqtr0c73admn4g</code></p>
+<p>Every number in this paper is computed from <code>runs/20261107-220808-qpu/</code> (<code>calibration.json</code>,
+<code>events.jsonl</code>, <code>experiments/*.json</code>) and can be regenerated with
+<code>uv run python -m scripts.write_paper runs/20261107-220808-qpu</code>.</p>
+
+<h2>References</h2>
+<ol class="refs"><li id="ref-ghz89">D. M. Greenberger, M. A. Horne and A. Zeilinger, “Going beyond Bell’s theorem,” in <i>Bell’s Theorem, Quantum Theory and Conceptions of the Universe</i>, M. Kafatos (ed.), Kluwer, pp. 69–72 (1989); arXiv:0712.0921.</li>
+<li id="ref-ghz90">D. M. Greenberger, M. A. Horne, A. Shimony and A. Zeilinger, “Bell’s theorem without inequalities,” <i>Am. J. Phys.</i> <b>58</b>, 1131 (1990).</li>
+<li id="ref-guhne09">O. Gühne and G. Tóth, “Entanglement detection,” <i>Phys. Rep.</i> <b>474</b>, 1–75 (2009).</li>
+<li id="ref-toth05">G. Tóth and O. Gühne, “Detecting genuine multipartite entanglement with two local measurements,” <i>Phys. Rev. Lett.</i> <b>94</b>, 060501 (2005).</li>
+<li id="ref-monz11">T. Monz <i>et al.</i>, “14-qubit entanglement: creation and coherence,” <i>Phys. Rev. Lett.</i> <b>106</b>, 130506 (2011).</li>
+<li id="ref-omran19">A. Omran <i>et al.</i>, “Generation and manipulation of Schrödinger cat states in Rydberg atom arrays,” <i>Science</i> <b>365</b>, 570 (2019).</li>
+<li id="ref-song19">C. Song <i>et al.</i>, “Generation of multicomponent atomic Schrödinger cat states of up to 20 qubits,” <i>Science</i> <b>365</b>, 574 (2019).</li>
+<li id="ref-mooney21">G. J. Mooney, G. A. L. White, C. D. Hill and L. C. L. Hollenberg, “Generation and verification of 27-qubit Greenberger–Horne–Zeilinger states in a superconducting quantum computer,” <i>J. Phys. Commun.</i> <b>5</b>, 095004 (2021).</li>
+<li id="ref-kim23">Y. Kim <i>et al.</i>, “Evidence for the utility of quantum computing before fault tolerance,” <i>Nature</i> <b>618</b>, 500 (2023).</li>
+<li id="ref-chamberland20">C. Chamberland, G. Zhu, T. J. Yoder, J. B. Hertzberg and A. W. Cross, “Topological and subsystem codes on low-degree graphs with flag qubits,” <i>Phys. Rev. X</i> <b>10</b>, 011022 (2020).</li>
+<li id="ref-viola99">L. Viola, E. Knill and S. Lloyd, “Dynamical decoupling of open quantum systems,” <i>Phys. Rev. Lett.</i> <b>82</b>, 2417 (1999).</li>
+<li id="ref-vdberg22">E. van den Berg, Z. K. Minev and K. Temme, “Model-free readout-error mitigation for quantum expectation values,” <i>Phys. Rev. A</i> <b>105</b>, 032620 (2022).</li>
+<li id="ref-efron79">B. Efron, “Bootstrap methods: another look at the jackknife,” <i>Ann. Statist.</i> <b>7</b>, 1–26 (1979).</li>
+<li id="ref-qiskit24">A. Javadi-Abhari <i>et al.</i>, “Quantum computing with Qiskit,” arXiv:2405.08810 (2024).</li></ol>
+<div class="colophon">Generated automatically by Q-Scientist from run 20261107-220808-qpu. Numbers are computed from the run log, never typed by hand.
+All prose was generated deterministically from templates.</div>
+</div>
+</body></html>

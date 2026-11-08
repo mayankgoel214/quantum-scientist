@@ -4,3 +4,4 @@ __pycache__/
 runs/*
 !runs/.gitkeep
 *.pyc
+!runs/20261107-220808-qpu/

@@ -1,0 +1,284 @@
+{
+ "exp_id": "e001",
+ "spec": {
+  "n_qubits": 16,
+  "layout_strategy": "weighted_tree",
+  "root": null,
+  "exclude_qubits": [],
+  "circuit_variant": "tree",
+  "dynamical_decoupling": true,
+  "measure_twirling": true,
+  "readout_mitigation": true,
+  "shots": 1000,
+  "mode": "qpu",
+  "hypothesis": "This experiment will certify GHZ entanglement, serving as a robust baseline.",
+  "sim_engine": "pauli_frame"
+ },
+ "physical_qubits": [
+  125,
+  124,
+  117,
+  123,
+  105,
+  136,
+  104,
+  122,
+  143,
+  106,
+  103,
+  121,
+  144,
+  96,
+  142,
+  145
+ ],
+ "tree_edges": [
+  [
+   125,
+   124
+  ],
+  [
+   125,
+   117
+  ],
+  [
+   124,
+   123
+  ],
+  [
+   117,
+   105
+  ],
+  [
+   123,
+   136
+  ],
+  [
+   105,
+   104
+  ],
+  [
+   123,
+   122
+  ],
+  [
+   136,
+   143
+  ],
+  [
+   105,
+   106
+  ],
+  [
+   104,
+   103
+  ],
+  [
+   122,
+   121
+  ],
+  [
+   143,
+   144
+  ],
+  [
+   103,
+   96
+  ],
+  [
+   143,
+   142
+  ],
+  [
+   144,
+   145
+  ]
+ ],
+ "root": 125,
+ "circuit_depth": 6,
+ "two_qubit_gate_count": 15,
+ "fidelity": 0.84064,
+ "ci_low": 0.81973,
+ "ci_high": 0.86164,
+ "populations": 0.8291,
+ "coherence": 0.85218,
+ "parity_curve": [
+  {
+   "phi": 0.0,
+   "parity": 0.91311
+  },
+  {
+   "phi": 0.1848,
+   "parity": -0.71185
+  },
+  {
+   "phi": 0.369599,
+   "parity": 0.76796
+  },
+  {
+   "phi": 0.554399,
+   "parity": -0.5203
+  },
+  {
+   "phi": 0.739198,
+   "parity": 0.36646
+  },
+  {
+   "phi": 0.923998,
+   "parity": -0.29592
+  },
+  {
+   "phi": 1.108797,
+   "parity": 0.08939
+  },
+  {
+   "phi": 1.293597,
+   "parity": 0.07823
+  },
+  {
+   "phi": 1.478397,
+   "parity": -0.12156
+  },
+  {
+   "phi": 1.663196,
+   "parity": 0.34353
+  },
+  {
+   "phi": 1.847996,
+   "parity": -0.3492
+  },
+  {
+   "phi": 2.032795,
+   "parity": 0.54312
+  },
+  {
+   "phi": 2.217595,
+   "parity": -0.63157
+  },
+  {
+   "phi": 2.402394,
+   "parity": 0.76293
+  },
+  {
+   "phi": 2.587194,
+   "parity": -0.7831
+  },
+  {
+   "phi": 2.771994,
+   "parity": 0.86015
+  },
+  {
+   "phi": 2.956793,
+   "parity": -0.86088
+  },
+  {
+   "phi": 3.141593,
+   "parity": 0.90245
+  },
+  {
+   "phi": 3.326392,
+   "parity": -0.7925
+  },
+  {
+   "phi": 3.511192,
+   "parity": 0.73551
+  },
+  {
+   "phi": 3.695991,
+   "parity": -0.55827
+  },
+  {
+   "phi": 3.880791,
+   "parity": 0.44939
+  },
+  {
+   "phi": 4.06559,
+   "parity": -0.32524
+  },
+  {
+   "phi": 4.25039,
+   "parity": 0.20717
+  },
+  {
+   "phi": 4.43519,
+   "parity": -0.02332
+  },
+  {
+   "phi": 4.619989,
+   "parity": -0.08383
+  },
+  {
+   "phi": 4.804789,
+   "parity": 0.24892
+  },
+  {
+   "phi": 4.989588,
+   "parity": -0.41367
+  },
+  {
+   "phi": 5.174388,
+   "parity": 0.59302
+  },
+  {
+   "phi": 5.359187,
+   "parity": -0.59684
+  },
+  {
+   "phi": 5.543987,
+   "parity": 0.71881
+  },
+  {
+   "phi": 5.728787,
+   "parity": -0.82362
+  },
+  {
+   "phi": 5.913586,
+   "parity": 0.84827
+  },
+  {
+   "phi": 6.098386,
+   "parity": -0.93337
+  }
+ ],
+ "certified": true,
+ "qpu_seconds": 13.0,
+ "wall_seconds": 213.06,
+ "backend": "ibm_fez",
+ "job_ids": [
+  "dbnuf68ou4as73b57070"
+ ],
+ "error": null,
+ "predicted": {
+  "fidelity": 0.90589,
+  "ci_low": 0.88962,
+  "ci_high": 0.92122,
+  "certified": true
+ },
+ "transpiled_depth": 28,
+ "plan_depth": 6,
+ "sim_method": null,
+ "p_all0": 0.42955,
+ "p_all1": 0.39956,
+ "readout_rates": {
+  "mean_e0": 0.01213,
+  "mean_e1": 0.013
+ },
+ "notes": {
+  "sampler_options": {
+   "default_shots": 1000,
+   "dynamical_decoupling": {
+    "enable": true,
+    "sequence_type": "XpXm"
+   },
+   "twirling": {
+    "enable_gates": false,
+    "enable_measure": true
+   }
+  },
+  "num_pubs": 37,
+  "dynamical_decoupling": "SamplerV2 dynamical_decoupling XpXm",
+  "measure_twirling": "SamplerV2 twirling.enable_measure",
+  "qpu_seconds_source": "job.usage()",
+  "execution": "batch submission (all jobs queued at once)"
+ }
+}
