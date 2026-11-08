@@ -1,6 +1,6 @@
 {
-  "llm_calls": 41,
-  "max_llm_calls": 41,
+  "llm_calls": 44,
+  "max_llm_calls": 45,
   "qpu_seconds": 322.0,
   "max_qpu_seconds": 480.0
 }

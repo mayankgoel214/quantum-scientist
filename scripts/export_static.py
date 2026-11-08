@@ -42,6 +42,10 @@ def export(out: Path, run_ids: list[str] | None) -> list[str]:
         dst = out / "data" / d.name
         (dst / "experiments").mkdir(parents=True)
         events = _read_events(d)
+        for ev in events:  # the public site names no model: keep only "llm" vs scripted planner
+            dd = ev.get("data") or {}
+            if isinstance(dd.get("planner"), str) and dd["planner"] not in ("fake", "scripted"):
+                dd["planner"] = "llm"
         (dst / "events.json").write_text(json.dumps({
             "run_id": d.name, "events": events,
             "finished": any(e.get("type") == "run_finished" for e in events),

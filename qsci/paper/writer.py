@@ -212,10 +212,9 @@ class Paper:
     def planner_phrase(self) -> str:
         planner = str(self.f.run_started.get("planner") or "gemini")
         auto = sum(1 for th in self.f.thoughts if str((th.get("data") or {}).get("text", "")).startswith("[autopilot]"))
-        if planner.startswith("gemini"):
-            model = planner.split(":", 1)[1] if ":" in planner else "Gemini"
+        if planner.startswith("gemini"):  # public text names no model: "an AI agent built on a large language model"
             extra = f" (a scripted fallback made {auto} of its decisions)" if auto else ""
-            return f"A language-model agent ({model}){extra}"
+            return f"An AI agent built on a large language model{extra}"
         return "A scripted baseline policy (no language model; dry run of the agent loop)"
 
     # -------------- abstract (plain text; may be LLM-polished)
@@ -310,7 +309,7 @@ separable across any bipartition. We therefore treat certification as a statisti
 the lower end of a confidence interval on <i>F</i> must exceed 1/2.</p>
 <p>Scaling the certified <i>N</i> on a {self.cal['n_qubits']}-qubit heavy-hex processor {cite('chamberland20')} is a search
 problem over layouts, circuit shapes and mitigation settings under a tight hardware budget. In this work the
-search was run end-to-end by an autonomous agent built on a large language model (Gemini), which proposed every
+search was run end-to-end by an autonomous agent built on a large language model, which proposed every
 experiment{', predicted each hardware result with a digital twin before it ran,' if self.f.batch else ', decided when a result in simulation justified spending hardware time,'} and wrote this report.
 The human operator set the goal and budget and ran the submit and collect commands; which experiments to run was the agent's choice.</p>
 """
@@ -663,7 +662,7 @@ bootstrap confidence interval; ✓ = certified (<i>F</i><sub>low</sub> &gt; 1/2)
             except metadata.PackageNotFoundError:
                 pass
         jobs = [(e.exp_id, j) for e in f.by_mode("qpu") for j in (e.raw.get("job_ids") or [])]
-        model = f.run_started.get("model") or f.run_started.get("planner") or "Gemini"
+        model = "large language model, via API"
         jobs_html = ("<p class='jobs'>" + "; ".join(f"{esc(x)}: <code>{esc(j)}</code>" for x, j in jobs) + "</p>") if jobs else "<p>No hardware jobs were submitted.</p>"
         return f"""
 <table class="kv">
@@ -712,7 +711,7 @@ bootstrap confidence interval; ✓ = certified (<i>F</i><sub>low</sub> &gt; 1/2)
                    "coloured by outcome; the line tracks the certified hardware record. Bottom: cumulative fraction of the QPU-time "
                    "and LLM-call budgets consumed.")
         today = datetime.now(timezone.utc).strftime("%B %-d, %Y")
-        polish_note = ("Abstract and discussion were copy-edited by Gemini under a numbers-must-not-change check."
+        polish_note = ("Abstract and discussion were copy-edited by a language model under a numbers-must-not-change check."
                        if self.pol.used else "All prose was generated deterministically from templates.")
         refs = "\n".join(f'<li id="ref-{k}">{t}</li>' for k, t in REFERENCES)
         rec_line = (f"Record: N = {r.n}, F = {r.fidelity:.3f} [{r.ci_low:.3f}, {r.ci_high:.3f}]" if r else "")
@@ -810,7 +809,7 @@ TEMPLATE = """<!doctype html>
 <body>
 <div class="preprint"><span>Q-Scientist preprint · run {run_id}</span><span>{rec_line}</span></div>
 <h1>{title}</h1>
-<div class="authors">Q-Scientist (autonomous agent, Gemini) and {operator}</div>
+<div class="authors">Q-Scientist (autonomous AI agent) and {operator}</div>
 <div class="affil">Q-Scientist autonomous laboratory · Qiskit Fall Fest 2026</div>
 <div class="date">{date}</div>
 <div class="abstract"><h2>Abstract</h2>{abstract}</div>

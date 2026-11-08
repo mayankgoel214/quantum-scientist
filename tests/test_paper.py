@@ -49,7 +49,7 @@ def test_key_numbers_in_html(generated: Path):
     assert f"[{hw['ci_low']:.3f}, {hw['ci_high']:.3f}]" in html
     assert f"N = {sim['spec']['n_qubits']}" in html
     assert f"{len(exp['exps'])} experiments" in html
-    assert "Q-Scientist (autonomous agent, Gemini) and Ada Lovelace" in html
+    assert "Q-Scientist (autonomous AI agent) and Ada Lovelace" in html
     run_id = json.loads((generated / "events.jsonl").read_text().splitlines()[0])["data"]["run_id"]
     assert run_id in html
     for e in exp["exps"]:  # every experiment in the table, every hardware job id listed

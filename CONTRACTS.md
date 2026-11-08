@@ -1,12 +1,12 @@
 # Q-Scientist — shared contracts
 
-An autonomous AI agent (Gemini) that runs GHZ-entanglement experiments on IBM quantum
+An autonomous AI agent that runs GHZ-entanglement experiments on IBM quantum
 hardware overnight, trying to certify genuine multipartite entanglement (fidelity > 0.5)
 on as many qubits as possible, then writes its own paper.
 
 Python 3.12, managed with `uv` (`uv run ...`). Deps already installed: qiskit 2.x,
 qiskit-ibm-runtime 0.51, qiskit-aer 0.18, numpy, matplotlib, requests, python-dotenv, pytest.
-No other dependencies without a very good reason. No Anthropic SDK. Gemini via plain REST (`requests`).
+No other dependencies without a very good reason. The language model is called via plain REST (`requests`).
 
 Secrets come from `.env` (see `.env.example`) via python-dotenv. Never print key values.
 
@@ -16,7 +16,7 @@ Secrets come from `.env` (see `.env.example`) via python-dotenv. Never print key
 qsci/core/      quantum core (calibration, layout, GHZ circuits, fidelity, execution)
 qsci/budget.py  hard caps for QPU seconds + LLM calls (persisted)
 qsci/events.py  event log writer (the ONLY way anything writes events)
-qsci/agent/     Gemini agent loop
+qsci/agent/     the AI agent agent loop
 qsci/paper/     auto-written paper (HTML + PDF) from a run directory
 ui/             mission-control web page (static; reads a run directory)
 runs/<run_id>/  all outputs of one run
@@ -98,7 +98,7 @@ Common fields: `{"ts": "ISO8601", "seq": int, "type": str, "data": {...}}`
 
 | type | data |
 |---|---|
-| `run_started` | `{run_id, mode, backend, goal, planner, max_llm_calls, max_qpu_seconds}` — planner e.g. "gemini:gemini-2.5-flash" or "fake" |
+| `run_started` | `{run_id, mode, backend, goal, planner, max_llm_calls, max_qpu_seconds}` — planner e.g. "<provider>:<model>" or "fake" |
 | `thought` | `{text}` — agent's reasoning, 1–4 sentences, shown in UI feed |
 | `experiment_started` | `{exp_id, spec}` |
 | `experiment_result` | `{exp_id, n_qubits, mode, fidelity, ci_low, ci_high, certified, physical_qubits, tree_edges, root, qpu_seconds, error}` |

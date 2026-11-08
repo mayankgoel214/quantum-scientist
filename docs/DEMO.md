@@ -16,7 +16,7 @@ the night."
 has to choose which qubits, which circuit shape, and how to spend 10 free minutes of QPU time."
 
 **0:35 Replay (60 s)**. Press Replay at 20×.
-- Agent log: "Here's Gemini's plan. It wrote a hypothesis for every experiment, including a head-to-head test: its
+- Agent log: "Here's the AI agent's plan. It wrote a hypothesis for every experiment, including a head-to-head test: its
   error-aware tree layout vs the textbook linear CNOT chain."
 - "Before submitting, every job went through my digital twin, a noise simulator driven by the live
   calibration. Those predictions were frozen to disk first. That's pre-registration."
@@ -41,14 +41,14 @@ has to choose which qubits, which circuit shape, and how to spend 10 free minute
 the bootstrap CIs, and the IBM job IDs so anyone can check."
 
 **2:45 Close (15 s)**
-"Qiskit Runtime, SamplerV2 with DD and twirling, a custom Pauli-frame simulator, a few cents of Gemini, and about 5 minutes of free QPU. An AI scientist that keeps itself honest. Thank you."
+"Qiskit Runtime, SamplerV2 with DD and twirling, a custom Pauli-frame simulator, a few cents of AI API calls, and about 5 minutes of free QPU. An AI scientist that keeps itself honest. Thank you."
 
 ---
 
 **Likely judge questions**
 - *Why trust the fidelity?* Populations plus parity Fourier amplitude, readout mitigation, bootstrap CI, and the
   certification only uses the lower bound. A unit test checks that separable states are never certified.
-- *Is the AI actually deciding?* Yes. The batch plan, hypotheses and round-2 follow-up are Gemini's, logged verbatim.
+- *Is the AI actually deciding?* Yes. The batch plan, hypotheses and round-2 follow-up are the AI agent's, logged verbatim.
   Validators only enforce safety rules (budget, a small anchor, the confirmation run).
 - *Why not bigger N?* No error detection or post-selection yet. That's the next step, and the twin's errors show
   where the noise model is wrong.
