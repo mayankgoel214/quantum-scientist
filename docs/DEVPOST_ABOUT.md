@@ -65,4 +65,4 @@ Built with help from an AI coding assistant, which the organizers allow. At runt
 - Live mission control (replay the night): https://q-scientist.vercel.app
 - Code: https://github.com/mayankgoel214/quantum-scientist
 - Paper (PDF): https://github.com/mayankgoel214/quantum-scientist/blob/main/runs/20261107-220808-qpu/paper/paper.pdf
-- Demo video: https://youtu.be/k1bR6KvyxzI
+- Demo video: https://youtu.be/eXRVliEFLpQ
