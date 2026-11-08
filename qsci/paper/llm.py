@@ -66,10 +66,38 @@ class Polisher:
                 self.enabled = False
                 return draft
         self.calls += 1
-        prompt = (
+        base = (
             f"Section: {section}\n\nVerified facts (computed from data, authoritative):\n{facts_summary}\n\n"
             f"Draft to rewrite:\n<<<\n{draft}\n>>>"
         )
+        feedback = ""
+        for attempt in range(2):  # one retry, told exactly which numbers it may not introduce
+            if attempt and self.budget is not None:  # the retry is a real model call: meter it too
+                from qsci.budget import BudgetExceeded
+                try:
+                    self.budget.charge_llm()
+                except BudgetExceeded:
+                    self.notes.append(f"{section}: no budget for a retry; kept template text")
+                    return draft
+            text = self._call(section, base + feedback)
+            if text is None:
+                return draft
+            if not text or len(text) < 0.5 * len(draft) or len(text) > 1.8 * len(draft):
+                self.notes.append(f"{section}: rewrite length out of range; kept template text")
+                return draft
+            extra = _numbers(text) - _numbers(draft)
+            if not extra:
+                break
+            feedback = (f"\n\nYour previous rewrite was rejected because it contained numbers not written exactly that "
+                        f"way in the draft: {sorted(extra)}. Copy every number exactly as the draft writes it "
+                        f"(same digits, same rounding, same fractions such as 1/2); do not convert or round.")
+        else:
+            self.notes.append(f"{section}: rewrite introduced new numbers; kept template text")
+            return draft
+        self.used = True
+        return text
+
+    def _call(self, section: str, prompt: str) -> str | None:
         try:
             r = requests.post(
                 f"https://generativelanguage.googleapis.com/v1beta/models/{self.model}:generateContent",
@@ -77,24 +105,17 @@ class Polisher:
                 json={
                     "systemInstruction": {"parts": [{"text": SYSTEM}]},
                     "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-                    "generationConfig": {"temperature": 0.3, "maxOutputTokens": 4096},
+                    "generationConfig": {"temperature": 0.3, "maxOutputTokens": 8192,
+                                         "thinkingConfig": {"thinkingBudget": 1024}},
                 },
                 timeout=60,
             )
             if r.status_code != 200:
                 self.notes.append(f"{section}: Gemini HTTP {r.status_code}; kept template text")
-                return draft
+                return None
             parts = r.json()["candidates"][0]["content"]["parts"]
             text = "".join(p.get("text", "") for p in parts if not p.get("thought")).strip()
         except Exception as exc:
             self.notes.append(f"{section}: Gemini call failed ({type(exc).__name__}); kept template text")
-            return draft
-        text = text.strip().strip("<>").strip()
-        if not text or len(text) < 0.5 * len(draft) or len(text) > 1.8 * len(draft):
-            self.notes.append(f"{section}: rewrite length out of range; kept template text")
-            return draft
-        if not numbers_preserved(draft, text):
-            self.notes.append(f"{section}: rewrite introduced new numbers; kept template text")
-            return draft
-        self.used = True
-        return text
+            return None
+        return text.strip().strip("<>").strip()

@@ -90,7 +90,7 @@ def test_llm_number_guard():
 
 
 def test_llm_polish_mocked(tmp_path, monkeypatch):
-    """Polish path without network: header-only key, <=2 calls, budget charged, bad rewrites rejected."""
+    """Polish path without network: header-only key, one retry per section, every call charged, bad rewrites rejected."""
     import qsci.paper.llm as llm
 
     run = tmp_path / FIXTURE.name
@@ -117,9 +117,9 @@ def test_llm_polish_mocked(tmp_path, monkeypatch):
     monkeypatch.setattr(llm.requests, "post", fake_post)
     res = __import__("qsci.paper", fromlist=["write_paper"]).write_paper(run, use_llm=True, pdf=False, log=lambda m: None)
     html = (run / "paper" / "paper.html").read_text()
-    assert len(calls) == 2
+    assert len(calls) == 3  # section 2 is retried once with feedback, then rejected
     assert "We present an autonomous search" in html
     assert "N = 99" not in html
     assert res["llm_used"] is True
     before = json.loads((FIXTURE / "budget.json").read_text())["llm_calls"]
-    assert json.loads((run / "budget.json").read_text())["llm_calls"] == before + 2
+    assert json.loads((run / "budget.json").read_text())["llm_calls"] == before + 3
