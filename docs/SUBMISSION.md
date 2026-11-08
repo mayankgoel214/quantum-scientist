@@ -1,7 +1,6 @@
 # Q-Scientist: an AI that does quantum experiments on real IBM hardware and writes the paper
 
-> Devpost draft for Qiskit Fall Fest 2026, advanced track. Numbers marked **[TBD]** are filled in from the
-> final run (`runs/20261107-220808-qpu`) once every hardware job has finished.
+> Devpost write-up for Qiskit Fall Fest 2026, advanced track. All numbers come from run `runs/20261107-220808-qpu`.
 
 ## One-liner
 An autonomous agent (Gemini) that designs GHZ-entanglement experiments, predicts every result with a digital twin
@@ -37,15 +36,16 @@ it records its predictions before the data exists and confirms its own record be
 ## Results (real hardware, ibm_fez)
 | | Result |
 |---|---|
-| Largest certified GHZ state | **[TBD] qubits**, F = [TBD] (95% CI [TBD]) |
-| Confirmation re-run of the record | [TBD] |
-| Error-aware tree vs textbook chain (N = 24) | tree F = 0.723 vs chain F = [TBD] |
-| Digital twin vs hardware | twin overestimated by [TBD] on average; predicted certification correctly in [TBD]/[TBD] |
-| QPU time used | [TBD] s of the free 600 s |
-| LLM cost | ≈ $[TBD] (Gemini 2.5 Flash) |
+| Largest certified GHZ state | **24 qubits**, F = 0.723 (95% CI [0.700, 0.746]); threshold is 0.5 |
+| Also certified | 16 qubits, F = 0.841 (95% CI [0.820, 0.862]) |
+| Error-aware tree vs textbook chain (N = 24) | tree F = 0.723 on hardware; chain job still in IBM's public queue (twin predicts 0.705) |
+| Digital twin vs hardware | predicted certification correctly 2/2; overestimated F by 0.065 (N=16) and 0.143 (N=24) |
+| QPU time used | 31 s of the free 600 s (billed via `job.usage()`) |
+| LLM cost | 1 Gemini 2.5 Flash planning call (well under $0.01) |
 
-First results in: N = 16 certified (F = 0.841, twin predicted 0.906) and N = 24 certified (F = 0.723, twin
-predicted 0.866).
+Gemini submitted a batch of 8 hardware experiments (N = 16 to 60). `ibm_fez` had ~20,000 jobs queued, so by the
+deadline 2 had returned; the other 6 are still queued and their *pre-registered* twin predictions are published in
+the run log, so they can be checked against hardware the moment they finish. We report only what actually ran.
 
 ## How we built it (Qiskit)
 - **qiskit 2.x**: GHZ trees built from a spanning tree of the coupling map, then transpiled with a fixed
@@ -73,8 +73,12 @@ predicted 0.866).
   anchor and an informative comparison.
 
 ## What we learned
-- The gap between a calibration-driven noise model and the real chip, measured out-of-sample: [TBD].
-- Where the error-aware layout helps, and by how much: [TBD].
+- The gap between a calibration-driven noise model and the real chip, measured out-of-sample: the twin was right
+  about *whether* entanglement certifies, but its fidelity error doubled from 0.065 at N=16 to 0.143 at N=24. Error
+  that grows with N means correlated noise (crosstalk, leakage, non-Markovian dephasing) the per-gate calibration
+  numbers don't capture, and it means the twin's optimistic predictions for N ≥ 40 should not be trusted.
+- Pre-registration matters: because predictions were frozen before the data, the twin's miss is a real
+  measurement rather than something we could quietly tune away.
 
 ## What's next
 - Error detection / post-selection to push certified N further.
@@ -87,5 +91,4 @@ experiment-planning agent. Every number in the paper is computed from the run lo
 ## Links
 - Live mission control (replay the night): https://q-scientist.vercel.app
 - Repo: https://github.com/mayankgoel214/quantum-scientist
-- Demo video: [TBD]
 - Paper PDF: https://github.com/mayankgoel214/quantum-scientist/blob/main/runs/20261107-220808-qpu/paper/paper.pdf

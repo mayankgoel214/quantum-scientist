@@ -25,20 +25,21 @@ has to choose which qubits, which circuit shape, and how to spend 10 free minute
   entanglement, not just the populations."
 
 **1:35 Results (40 s)**. Fidelity panel and paper Fig. 5.
-- "[TBD] qubits certified on real hardware, F = [TBD]."
-- "Tree vs chain at 24 qubits: [TBD] vs [TBD]. The layout choice is the difference between entangled and not."
-- "The twin overestimated hardware by about [TBD] on average. That's an out-of-sample measurement of what our
-  noise model misses."
-- "Round 2: the agent read those results and re-ran its own record to confirm it, because the best of several noisy
-  runs is biased upward. The confirmation came back [TBD]."
+- "24 qubits certified on real hardware, F = 0.723, lower bound 0.700, well above the 0.5 line. 16 qubits at 0.841."
+- "Gemini submitted 8 experiments up to 60 qubits, but ibm_fez had 20,000 jobs queued. Two came back; the rest
+  are still queued, with their predictions already frozen on disk, so they're checkable the moment they land."
+- "The twin got certification right both times, but its error doubled from 0.07 at 16 qubits to 0.14 at 24.
+  Error growing with N is the signature of correlated noise that calibration numbers don't capture. That's a
+  finding, and we could only make it because the predictions were frozen first."
+- "Round 2 is built: when the queue clears, the agent reads its results and must re-run its own record to confirm
+  it, because the best of several noisy runs is biased upward."
 
 **2:15 The paper (30 s)**. Scroll the PDF.
 "Every number here is computed from the run log, never typed by the model. It includes its own limitations section,
 the bootstrap CIs, and the IBM job IDs so anyone can check."
 
 **2:45 Close (15 s)**
-"Qiskit Runtime, SamplerV2 with DD and twirling, a custom Pauli-frame simulator, about 50 cents of Gemini, and under
-10 minutes of free QPU. An AI scientist that keeps itself honest. Thank you."
+"Qiskit Runtime, SamplerV2 with DD and twirling, a custom Pauli-frame simulator, one Gemini planning call, and 31 seconds of free QPU. An AI scientist that keeps itself honest. Thank you."
 
 ---
 
